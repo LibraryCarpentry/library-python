@@ -55,19 +55,6 @@ Output generating figures:
 
 ~~~
 library(ggplot2)
-~~~
-{: .r}
-
-
-
-~~~
-Warning: package 'ggplot2' was built under R version 3.1.3
-~~~
-{: .error}
-
-
-
-~~~
 ggplot(diamonds, aes(x = carat,  y = price, color = cut)) +
     geom_point()
 ~~~

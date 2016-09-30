@@ -1,7 +1,7 @@
 ---
 title: "Python introduction"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "What is Python?"
 objectives:
@@ -39,19 +39,31 @@ Python 3.5.1 (default, Oct 23 2015, 18:05:06)
 [GCC 4.8.3] on linux2
 Type "help", "copyright", "credits" or "license" for more information.
 >>> 2 + 2
-4
->>> print("Hello World")
-Hello World
 ~~~
 {: .source}
+~~~
+4
+~~~
+{: .output}
+~~~
+>>> print("Hello World")
+~~~
+{: .source}
+~~~
+Hello World
+~~~
+{: .output}
 
 * Executing programs/scripts saved as a text file, usually with `*.py` extension:
 
 ~~~
 user:host:~$ python my_script.py
-Hello World
 ~~~
 {: .source}
+~~~
+Hello World
+~~~
+{: .output}
 
 ## Introduction to Python built-in data types
 
@@ -60,7 +72,7 @@ Hello World
 The most basic data types in Python are strings, integers and floats:
 
 ~~~
-text = "Data Carpentry"
+text = "Library Carpentry"
 number = 42
 pi_value = 3.1415
 ~~~
@@ -77,9 +89,12 @@ variable into the interpreter:
 
 ~~~
 >>> text
-"Data Carpentry"
 ~~~
 {: .source}
+~~~
+"Data Carpentry"
+~~~
+{: .output}
 
 however, in scripts we must use the `print` function:
 
@@ -87,9 +102,12 @@ however, in scripts we must use the `print` function:
 # Comments start with #
 # Next line will print out text
 print(text)
-"Data Carpentry"
 ~~~
 {: .source}
+~~~
+"Data Carpentry"
+~~~
+{: .output}
 
 ### Operators
 
@@ -98,15 +116,36 @@ We can perform mathematical calculations in Python using the basic operators
 
 ~~~
 >>> 2 + 2
-4
->>> 6 * 7
-42
->>> 2 ** 16  # power
-65536
->>> 13 % 5  # modulo
-3
 ~~~
 {: .source}
+~~~
+4
+~~~
+{: .output}
+~~~
+>>> 6 * 7
+~~~
+{: .source}
+~~~
+42
+~~~
+{: .output}
+~~~
+>>> 2 ** 16  # power
+~~~
+{: .source}
+~~~
+65536
+~~~
+{: .output}
+~~~
+>>> 13 % 5  # modulo
+~~~
+{: .source}
+~~~
+3
+~~~
+{: .output}
 
 We can also use comparison and logic operators:
 `<, >, ==, !=, <=, >=` etc.
@@ -114,13 +153,28 @@ We can also use comparison and logic operators:
 
 ~~~
 >>> 3 > 4
-False
->>> True and True
-True
->>> True or False
-True
 ~~~
 {: .source}
+~~~
+False
+~~~
+{: .output}
+~~~
+>>> True and True
+~~~
+{: .source}
+~~~
+True
+~~~
+{: .output}
+~~~
+>>> True or False
+~~~
+{: .source}
+~~~
+True
+~~~
+{: .output}
 
 ## Sequential types: Lists and Tuples
 
@@ -132,9 +186,12 @@ elements. Each element can be accessed by an index:
 ~~~
 >>> numbers = [1,2,3]
 >>> numbers[0]
-1
 ~~~
 {: .source}
+~~~
+1
+~~~
+{: .output}
 
 A `for` loop can be used to access the elements in a list or other Python data
 structure one at a time:
@@ -142,11 +199,14 @@ structure one at a time:
 ~~~
 for num in numbers:
     print(num)
+~~~
+{: .source}
+~~~
 1
 2
 3
 ~~~
-{: .source}
+{: .output}
 
 **Indentation** is very important in Python. Note that the second line in the
 example above is indented. This is Python's way of marking a block of code. We will
@@ -157,9 +217,12 @@ To add elements to the end of a list, we can use the `append` method:
 ~~~
 >>> numbers.append(4)
 >>> print(numbers)
-[1,2,3,4]
 ~~~
 {: .source}
+~~~
+[1,2,3,4]
+~~~
+{: .output}
 
 Methods are a way to interact with an object (a list, for example). We can invoke
 a method using the dot `.` followed by the method name and a list of arguments in parentheses.
@@ -167,7 +230,9 @@ To find out what methods are available for an object, we can use the built-in `h
 
 ~~~
 help(numbers)
-
+~~~
+{: .source}
+~~~
 Help on list object:
 
 class list(object)
@@ -175,7 +240,7 @@ class list(object)
  |  list(iterable) -> new list initialized from iterable's items
  ...
 ~~~
-{: .source}
+{: .output}
 
 We can also access a list of methods using `dir`. Some methods names are
 surrounded by double underscores. Those methods are called "special", and
@@ -183,11 +248,13 @@ usually we access them in a different way. For example `__add__` method is
 responsible for the `+` operator.
 
 ~~~
-dir(numbers)
 >>> dir(numbers)
-['__add__', '__class__', '__contains__', ...]
 ~~~
 {: .source}
+~~~
+['__add__', '__class__', '__contains__', ...]
+~~~
+{: .output}
 
 ### Tuples
 
@@ -237,9 +304,13 @@ A **dictionary** is a container that holds pairs of objects - keys and values.
 ~~~
 >>> translation = {"one" : 1, "two" : 2}
 >>> translation["one"]
-1
 ~~~
 {: .source}
+~~~
+1
+~~~
+{: .output}
+
 Dictionaries work a lot like lists - except that you index them with *keys*.
 You can think about a key as a name for or a unique identifier for a set of values
 in the dictionary. Keys can only have particular types - they have to be
@@ -248,14 +319,21 @@ in the dictionary. Keys can only have particular types - they have to be
 ~~~
 >>> rev = {1 : "one", 2 : "two"}
 >>> rev[1]
+~~~
+{: .source}
+~~~
 'one'
+~~~
+{: .output}
+~~~
 >>> bad = {[1,2,3] : 3}
+~~~
+{: .source}
+~~~
 ...
 TypeError: unhashable type: 'list'
 ~~~
-{: .source}
-
-
+{: .output}
 
 
 To add an item to the dictionary we assign a value to a new key:
@@ -264,9 +342,12 @@ To add an item to the dictionary we assign a value to a new key:
 >>> rev = {1 : "one", 2 : "two"}
 >>> rev[3] = "three"
 >>> rev
-{1: 'one', 2: 'two', 3: 'three'}
 ~~~
 {: .source}
+~~~
+{1: 'one', 2: 'two', 3: 'three'}
+~~~
+{: .output}
 
 Using `for` loops with dictionaries is a little more complicated. We can do this
 in two ways:
@@ -275,11 +356,14 @@ in two ways:
 >>> for key, value in rev.items():
 ...     print(key, "->", value)
 ...
+~~~
+{: .source}
+~~~
 1 -> one
 2 -> two
 3 -> three
 ~~~
-{: .source}
+{: .output}
 
 or
 
@@ -287,12 +371,14 @@ or
 >>> for key in rev.keys():
 ...     print(key, "->", rev[key])
 ...
+~~~
+{: .source}
+~~~
 1 -> one
 2 -> two
 3 -> three
->>>
 ~~~
-{: .source}
+{: .output}
 
 
 > ## Reassignment

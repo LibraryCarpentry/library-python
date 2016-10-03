@@ -28,7 +28,8 @@ exercise. Let's reopen it:
 # first make sure pandas is loaded
 import pandas as pd
 # read in the survey csv
-surveys_df = pd.read_csv("https://ndownloader.figshare.com/files/2292172")
+articles_df = pd.read_csv("doaj-article-sample.csv")
+articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
 ~~~
 {: .source}
 
@@ -42,22 +43,22 @@ numeric ranges or specific x,y index locations.
 ## Selecting Data Using Labels (Column Headings)
 
 We use square brackets *[]* to select a subset of an Python object. For example,
-we can select all of data from a column named *species_id* from the *surveys_df*
+we can select all of data from a column named *Authors* from the *articles_df*
 DataFrame by name:
 
 ~~~
-surveys_df['species_id']
+articles_df['Authors']
 # this syntax, calling the column as an attribute, gives you the same output
-surveys_df.species_id
+articles_df.Authors
 ~~~
 {: .source}
 
-We can also create an new object that contains the data within the *species_id*
+We can also create an new object that contains the data within the *Authors*
 column as follows:
 
 ~~~
-# create an object named surveys_species that only contains the *species_id* column
-surveys_species = surveys_df['species_id']
+# create an object named authors that only contains the *Authors* column
+authors = articles_df['Authors']
 ~~~
 {: .source}
 
@@ -69,11 +70,11 @@ order. This is useful when we need to reorganize our data.
 
 ~~~
 # select the species and plot columns from the DataFrame
-surveys_df[['species_id', 'plot_id']]
+articles_df[['Authors', 'Publisher']]
 # what happens when you flip the order?
-surveys_df[['plot_id', 'species_id']]
+articles_df[['Publisher', 'Authors']]
 #what happens if you ask for a column that doesn't exist?
-surveys_df['speciess']
+articles_df['column_that_does_not_exist']
 ~~~
 {: .source}
 
@@ -93,27 +94,27 @@ a = [1,2,3,4,5]
 ~~~
 {: .source}
 
-![indexing diagram](img/slicing-indexing.svg)
-![slicing diagram](img/slicing-slicing.svg)
+![indexing diagram]({{ page.root }}/fig/slicing-indexing.svg)
+![slicing diagram]({{ page.root }}/fig/slicing-slicing.svg)
 
 > ## Challenge
 >
 > 1. What value does the code below return?
 >
 > ~~~
->         a[0]
+> a[0]
 > ~~~
 > {: .source}
 > 2. How about this:
 >
 > ~~~
->         a[5]
+> a[5]
 > ~~~
 > {: .source}
 > 3. Or this?
 >
 > ~~~
->         a[len(a)]
+> a[len(a)]
 > ~~~
 > {: .source}
 > 4. In the example above, calling *a[5]* returns an error. Why is that?
@@ -129,7 +130,7 @@ want to select rows 0, 1 and 2 your code would look like this:
 
 ~~~
 # select rows 0,1,2 (but not 3)
-surveys_df[0:3]
+articles_df[0:3]
 ~~~
 {: .source}
 
@@ -138,11 +139,11 @@ languages like Matlab and R.
 
 ~~~
 # select the first, second and third rows from the surveys variable
-surveys_df[0:3]
+articles_df[0:3]
 # select the first 5 rows (rows 0,1,2,3,4)
-surveys_df[:5]
+articles_df[:5]
 # select the last element in the list
-surveys_df[-1:]
+articles_df[-1:]
 ~~~
 {: .source}
 
@@ -151,34 +152,34 @@ copy of our DataFrame so as not to modify our original imported data.
 
 ~~~
 # copy the surveys dataframe so we don't modify the original DataFrame
-surveys_copy = surveys_df
+articles_copy = articles_df
 
 # set the first three rows of data in the DataFrame to 0
-surveys_copy[0:3] = 0
+articles_copy[0:3] = 0
 ~~~
 {: .source}
 
 Next, try the following code:
 
 ~~~
-surveys_copy.head()
-surveys_df.head()
+articles_copy.head()
+articles_df.head()
 ~~~
 {: .source}
 What is the difference between the two data frames?
 
 ## Referencing Objects vs Copying Objects in Python
-We might have thought that we were creating a fresh copy of the *surveys_df* objects when we
-used the code *surveys_copy = surveys_df*. However the statement  y = x doesn’t create a copy of our DataFrame.
+We might have thought that we were creating a fresh copy of the *articles_df* objects when we
+used the code *articles_copy = articles_df*. However the statement  y = x doesn’t create a copy of our DataFrame.
 It creates a new variable y that refers to the **same** object x refers to. This means that there is only one object
 (the DataFrame), and both x and y refer to it. So when we assign the first 3 columns the value of 0 using the
-*surveys_copy* DataFrame, the *surveys_df* DataFrame is modified too. To create a fresh copy of the *surveys_df*
-DataFrame we use the syntax y=x.copy(). But before we have to read the surveys_df again because the current version contains the unintentional changes made to the first 3 columns.
+*articles_copy* DataFrame, the *articles_df* DataFrame is modified too. To create a fresh copy of the *articles_df*
+DataFrame we use the syntax y=x.copy(). But before we have to read the articles_df again because the current version contains the unintentional changes made to the first 3 columns.
 
 ~~~
-surveys_df = pd.read_csv("https://ndownloader.figshare.com/files/2292172")
-surveys_copy= surveys_df.copy()
-
+articles_df = pd.read_csv("doaj-article-sample.csv")
+articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
+articles_copy = articles_df.copy()
 ~~~
 {: .source}
 
@@ -195,17 +196,28 @@ method. For example, we can select month, day and year (columns 2, 3 and 4 if we
 start counting at 1), like this:
 
 ~~~
-surveys_df.iloc[0:3, 1:4]
+articles_df.iloc[0:3, 1:4]
 ~~~
 {: .source}
 
 which gives:
 
 ~~~
-   month  day  year
-0      7   16  1977
-1      7   16  1977
-2      7   16  1977
+                                             Authors  \
+0                     Flavia Pennini|Angelo Plastino   
+1                         Naveed Aslam|Peter C. Wynn   
+2  Rafael R. C. Cuadrat|Juliano C. Cury|Alberto M...   
+
+                          DOI  \
+0           10.3390/e17127853   
+1  10.3390/agriculture5041172   
+2       10.3390/ijms161226101   
+
+                                                 URL  
+0  https://doaj.org/article/b75e8d5cca3f46cbbd63e...  
+1  https://doaj.org/article/0edc5af6672641c0bd456...  
+2  https://doaj.org/article/d9fe469f75a0442382b84...  
+
 ~~~
 {: .output}
 
@@ -217,12 +229,12 @@ Let's next explore some other ways to index and select subsets of data:
 
 ~~~
 # select all columns for rows of index values 0 and 10
-surveys_df.loc[[0, 10], :]
+articles_df.loc[[0, 10], :]
 # what does this do?
-surveys_df.loc[0, ['species_id', 'plot_id', 'weight']]
+articles_df.loc[0, ['Authors', 'Publisher', 'Title']]
 
 # What happens when you type the code below?
-surveys_df.loc[[0, 10, 35549], :]
+articles_df.loc[[0, 10, 35549], :]
 ~~~
 {: .source}
 
@@ -238,28 +250,28 @@ column location within the data frame using the *iloc* function:
 
 
 ~~~
-surveys_df.iloc[2,6]
+articles_df.iloc[2,0]
 ~~~
 {: .source}
 
 which gives:
 
 ~~~
-'F'
+'Metagenomic Analysis of Upwelling-Affected Brazilian Coastal Seawater Reveals Sequence Domains of Type I PKS and Modular NRPS'
 ~~~
 {: .output}
 
-Remember that Python indexing begins at 0. So, the index location [2, 6] selects
-the element that is 3 rows down and 7 columns over in the DataFrame.
+Remember that Python indexing begins at 0. So, the index location [2, 0] selects
+the element that is 3 rows down and first column in the DataFrame.
 
 > ## Challenge Activities
 >
 > 1. What happens when you type:
 >
 > ~~~
-> surveys_df[0:3]
-> surveys_df[:5]
-> surveys_df[-1:]
+> articles_df[0:3]
+> articles_df[:5]
+> articles_df[-1:]
 > ~~~
 > {: .source}
 >
@@ -272,44 +284,42 @@ the element that is 3 rows down and 7 columns over in the DataFrame.
 ## Subsetting Data Using Criteria
 
 We can also select a subset of our data using criteria. For example, we can
-select all rows that have a year value of 2002.
+select all rows that have a single author.
 
 ~~~
-surveys_df[surveys_df.year == 2002]
+articles_df[articles_df.AuthorCount==1]
 ~~~
 {: .source}
 
 Which produces the following output:
 
 ~~~
-record_id  month  day  year  plot_id species_id  sex  hindfoot_length  weight
-33320      33321      1   12  2002        1         DM    M     38      44
-33321      33322      1   12  2002        1         DO    M     37      58
-33322      33323      1   12  2002        1         PB    M     28      45
-33323      33324      1   12  2002        1         AB  NaN    NaN     NaN
-33324      33325      1   12  2002        1         DO    M     35      29
+                                                 Title  \
+15   Performance-Based Cognitive Screening Instrume...   
+27   Comments on Ekino et al. Cloning and Character...   
+64   The Ubiquity of Humanity and Textuality in Hum...   
+70   Effect of Water Nutrient Pollution on Long-Ter...   
 ...
-35544      35545     12   31  2002       15         AH  NaN    NaN     NaN
-35545      35546     12   31  2002       15         AH  NaN    NaN     NaN
-35546      35547     12   31  2002       10         RM    F     15      14
-35547      35548     12   31  2002        7         DO    M     36      51
-35548      35549     12   31  2002        5        NaN  NaN    NaN     NaN
-
-[2229 rows x 9 columns]
+     AuthorCount  
+15             1  
+27             1  
+...
+773            1  
+827            1  
 ~~~
 {: .output}
 
 Or we can select all rows that do not contain the year 2002.
 
 ~~~
-surveys_df[surveys_df.year != 2002]
+articles_df[articles_df.year != 2002]
 ~~~
 {: .source}
 
 We can define sets of criteria too:
 
 ~~~
-surveys_df[(surveys_df.year >= 1980) & (surveys_df.year <= 1985)]
+articles_df[(articles_df.year >= 1980) & (articles_df.year <= 1985)]
 ~~~
 {: .source}
 
@@ -327,18 +337,18 @@ with selecting various subsets of the "surveys" data.
 
 > ## Challenge Activities
 >
-> 1. Select a subset of rows in the *surveys_df* DataFrame that contain data from
->    the year 1999 and that contain weight values less than or equal to 8. How
->    many columns did you end up with? What did your neighbor get?
+> 1. Select a subset of rows in the *articles_df* DataFrame that contain articles
+>    from at least 2 authors in Spanish. How many rows did you end up with?
+>    What did your neighbor get?
 > 2. You can use the *isin* command in python to query a DataFrame based upon a
 >    list of values as follows:
->    *surveys_df[surveys_df['species_id'].isin([listGoesHere])]*. Use the *isin* function
->    to find all plots that contain particular species in
->    the surveys DataFrame. How many records contain these values?
-> 3. Experiment with other queries. Create a query that finds all rows with a weight value > or equal to 0.
-> 4. The *~* symbol in Python can be used to return the OPPOSITE of the selection that you specify in python.
-> It is equivalent to **is not in**. Write a query that selects all rows that are NOT equal to 'M' or 'F' in the surveys
-> data.
+>    *articles_df[articles_df['Publisher'].isin([listGoesHere])]*. Use the *isin* function
+>    to find all articles from particular publishers. How many records did you get?
+> 3. Experiment with other queries. Create a query that finds all rows with
+>    an *AuthorCount* of 0 or less.
+> 4. The *~* symbol in Python can be used to return the OPPOSITE of the
+>    selection that you specify in python. It is equivalent to **is not in**.
+>    Write a query that selects all rows that are NOT in English.
 {: .challenge}
 
 # Using Masks
@@ -373,56 +383,39 @@ boolean object.
 
 
 ~~~
-pd.isnull(surveys_df)
+pd.isnull(articles_df)
 ~~~
 {: .source}
-
-A snippet of the output is below:
-
-~~~
-      record_id  month    day   year plot_id species_id    sex  hindfoot_length weight
-0         False  False  False  False   False      False  False   False      True
-1         False  False  False  False   False      False  False   False      True
-2         False  False  False  False   False      False  False   False      True
-3         False  False  False  False   False      False  False   False      True
-4         False  False  False  False   False      False  False   False      True
-
-[35549 rows x 9 columns]
-~~~
-{: .output}
 
 To select the rows where there are null values,  we can use
 the mask as an index to subset our data as follows:
 
 ~~~
 #To select just the rows with NaN values, we can use the .any method
-surveys_df[pd.isnull(surveys_df).any(axis=1)]
+articles_df[pd.isnull(articles_df).any(axis=1)]
 ~~~
 {: .source}
-
-Note that there are many null or NaN values in the *weight* column of our DataFrame.
-We will explore different ways of dealing with these in Lesson 03.
 
 We can run *isnull* on a particular column too. What does the code below do?
 
 ~~~
 # what does this do?
-empty_weights = surveys_df[pd.isnull(surveys_df).any(axis=1)]['weight']
+empty_lang = articles_df[pd.isnull(articles_df['Language'])]
 ~~~
 {: .source}
 
 Let's take a minute to look at the statement above. We are using the Boolean
 object as an index. We are asking python to select rows that have a *NaN* value
-for weight.
+for Language.
 
 
 > ## Challenges
 >
-> 1. Create a new DataFrame that only contains observations with sex values that
->    are **not** female or male. Assign each sex value in the new DataFrame to a
->    new value of *x*. Determine the number of null values in the subset.
-> 2. Create a new DataFrame that contains only observations that are of sex male
->    or female and where weight values are greater than 0. Create a stacked bar
->    plot of average weight by plot with male vs female values stacked for each
->    plot.
+> 1. Create a new DataFrame that only contains observations with Language values
+>    that are English or French. Assign each language value in the  new DataFrame
+>    to a new value of *x*. Determine the number of null values in the subset.
+> 2. Create a new DataFrame that contains only observations that are English or
+>    french and where the author count is greater than 2. Create a stacked bar
+>    plot of average number of authors by language with English vs French values
+>    stacked for each publisher.
 {: .challenge}

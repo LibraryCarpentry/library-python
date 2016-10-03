@@ -1,7 +1,7 @@
 ---
 title: "Combining DataFrames with pandas"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "How do we combine data from multiple sources?"
 objectives:
@@ -24,57 +24,54 @@ the data. The pandas package provides [various methods for combining
 DataFrames](http://pandas.pydata.org/pandas-docs/stable/merging.html) including
 *merge* and *concat*.
 
+In these examples we will be using the same data set, but divided into different
+tables, which you can download from [figshare](https://figshare.com/articles/LC-articles/3409471)
 
 To work through the examples below, we first need to load the species and
 surveys files into pandas DataFrames. In iPython:
 
 ~~~
 import pandas as pd
-surveys_df = pd.read_csv("https://ndownloader.figshare.com/files/2292172",
+articles_df = pd.read_csv('articles.csv',
                          keep_default_na=False, na_values=[""])
-surveys_df
+articles_df
 ~~~
 {: .source}
 ~~~
-       record_id  month  day  year  plot species  sex  hindfoot_length weight
-0              1      7   16  1977     2      NA    M               32  NaN
-1              2      7   16  1977     3      NA    M               33  NaN
-2              3      7   16  1977     2      DM    F               37  NaN
-3              4      7   16  1977     7      DM    M               36  NaN
-4              5      7   16  1977     3      DM    M               35  NaN
-...          ...    ...  ...   ...   ...     ...  ...              ...  ...
-35544      35545     12   31  2002    15      AH  NaN              NaN  NaN
-35545      35546     12   31  2002    15      AH  NaN              NaN  NaN
-35546      35547     12   31  2002    10      RM    F               15   14
-35547      35548     12   31  2002     7      DO    M               36   51
-35548      35549     12   31  2002     5     NaN  NaN              NaN  NaN
+        id                                              Title  \
+0        0   The Fisher Thermodynamics of Quasi-Probabilities   
+1        1  Aflatoxin Contamination of the Milk Supply: A ...   
+2        2  Metagenomic Analysis of Upwelling-Affected Bra...   
+...
+999       1  2015  
+1000     11  2015  
 
-[35549 rows x 9 columns]
+[1001 rows x 16 columns]
 ~~~
 {: .output}
 
 ~~~
-species_df = pd.read_csv('https://ndownloader.figshare.com/files/3299483',
-                         keep_default_na=False, na_values=[""])
-species_df
+journals_df = pd.read_csv('journals.csv')
+journals_df
 ~~~
 {: .source}
 
 ~~~
-  species_id             genus          species     taxa
-0          AB        Amphispiza        bilineata     Bird
-1          AH  Ammospermophilus          harrisi   Rodent
-2          AS        Ammodramus       savannarum     Bird
-3          BA           Baiomys          taylori   Rodent
-4          CB   Campylorhynchus  brunneicapillus     Bird
-..        ...               ...              ...      ...
-49         UP            Pipilo              sp.     Bird
-50         UR            Rodent              sp.   Rodent
-51         US           Sparrow              sp.     Bird
-52         ZL       Zonotrichia       leucophrys     Bird
-53         ZM           Zenaida         macroura     Bird
+    id     ISSN-L                ISSNs  PublisherId  \
+0    0  2056-9890            2056-9890            1   
+1    1  2077-0472            2077-0472            2   
+2    2  2073-4395            2073-4395            2   
+...
+49  49  1999-4915            1999-4915            2   
+50  50  2073-4441            2073-4441            2   
 
-[54 rows x 4 columns]
+                                        Journal_Title  
+0   Acta Crystallographica Section E Crystallograp...  
+1                                         Agriculture  
+2                                            Agronomy  
+...
+49                                            Viruses  
+50                                              Water
 ~~~
 {: .output}
 
@@ -94,11 +91,11 @@ works.
 
 ~~~
 # read in first 10 lines of surveys table
-survey_sub = surveys_df.head(10)
+articles_sub = articles_df.head(10)
 # grab the last 10 rows (minus the last one)
-survey_sub_last10 = surveys_df[-11:-1]
+articles_sub_last10 = articles_df[-11:-1]
 #reset the index values to the second dataframe appends properly
-survey_sub_last10=survey_sub_last10.reset_index(drop=True)
+articles_sub_last10 = articles_sub_last10.reset_index(drop=True)
 # drop=True option avoids adding new index column with old index values
 ~~~
 {: .source}
@@ -114,16 +111,16 @@ related in some way).
 
 ~~~
 # stack the DataFrames on top of each other
-vertical_stack = pd.concat([survey_sub, survey_sub_last10], axis=0)
+vertical_stack = pd.concat([articles_sub, articles_sub_last10], axis=0)
 
 # place the DataFrames side by side
-horizontal_stack = pd.concat([survey_sub, survey_sub_last10], axis=1)
+horizontal_stack = pd.concat([articles_sub, articles_sub_last10], axis=1)
 ~~~
 {: .source}
 
 ### Row Index Values and Concat
 Have a look at the *vertical_stack* dataframe? Notice anything unusual?
-The row indexes for the two data frames *survey_sub* and *survey_sub_last10*
+The row indexes for the two data frames *articles_sub* and *articles_sub_last10*
 have been repeated. We can reindex the new dataframe using the *reset_index()* method.
 
 ## Writing Out Data to CSV
@@ -151,10 +148,9 @@ newOutput = pd.read_csv('out.csv', keep_default_na=False, na_values=[""])
 
 > ## Challenge
 >
-> In the data folder, there are two survey data files: *survey2001.csv* and
-> *survey2002.csv*. Read the data into python and combine the files to make one
-> new data frame. Create a plot of average plot weight by year grouped by sex.
-> Export your results as a CSV and make sure it reads back into python properly.
+> Split the articles_df DataFrame by month, and save as a separate CSV file.
+> Afterwards read in some of your files, to make sure they can be loaded
+> back to Python.
 {: .challenge}
 
 # Joining DataFrames
@@ -170,22 +166,20 @@ table" containing additional data that we want to include in the other.
 NOTE: This process of joining tables is similar to what we do with tables in an
 SQL database.
 
-For example, the *species.csv* file that we've been working with is a lookup
-table. This table contains the genus, species and taxa code for 55 species. The
-species code is unique for each line. These species are identified in our survey
-data as well using the unique species code. Rather than adding 3 more columns
-for the genus, species and taxa to each of the 35,549 line Survey data table, we
-can maintain the shorter table with the species information. When we want to
-access that information, we can create a query that joins the additional columns
-of information to the Survey data.
+For example, the *journals.csv* file that we've been working with is a lookup
+table. This table contains the name of the different journals and an journal ID.
+The journal ID is unique for each line. These journals are identified in our articles
+table as well using the unique journal id. Rather than adding the full name of
+the journal to the articles table, we can maintain the shorter table with the
+journal information. When we want to access that information, we can create a
+query that joins the additional columns of information to the articles data.
 
 Storing data in this way has many benefits including:
 
-1. It ensures consistency in the spelling of species attributes (genus, species
-   and taxa) given each species is only entered once. Imagine the possibilities
-   for spelling errors when entering the genus and species thousands of times!
-2. It also makes it easy for us to make changes to the species information once
-   without having to find each instance of it in the larger survey data.
+1. It ensures consistency in the spelling of journal information (Journal title,
+  ISSN, Publisher ID).
+2. It also makes it easy for us to make changes to the journal information once
+   without having to find each instance of it in the larger article table.
 3. It optimizes the size of our data.
 
 
@@ -196,18 +190,16 @@ subset to work with. We'll use the *.head* method to do this. We'll also read
 in a subset of the species table.
 
 ~~~
-# read in first 10 lines of surveys table
-survey_sub = surveys_df.head(10)
+# read in first 10 lines of articles table
+articles_sub = articles_df.head(10)
 
-# import a small subset of the species data designed for this part of the lesson
-species_sub = pd.read_csv('species_subset.csv', keep_default_na=False, na_values=[""])
+# read in first 15 lines of journals table
+journals_sub = journals_df.head(15)
 ~~~
 {: .source}
 
-In this example, *species_sub* is the lookup table containing genus, species, and
-taxa names that we want to join with the data in *survey_sub* to produce a new
-DataFrame that contains all of the columns from both *species_df* *and*
-*survey_df*.
+In this example, we want to join with the data in *articles_sub* with the data
+from both *journals_sub*.
 
 
 ## Identifying join keys
@@ -220,24 +212,34 @@ identify a (differently-named) column in each DataFrame that contains the same
 information.
 
 ~~~
-species_sub.columns
-
-Index([u'species_id', u'genus', u'species', u'taxa'], dtype='object')
-
-survey_sub.columns
-
-Index([u'record_id', u'month', u'day', u'year', u'plot_id', u'species_id',
-       u'sex', u'hindfoot_length', u'weight'], dtype='object')
+journals_sub.columns
 ~~~
 {: .source}
 
-In our example, the join key is the column containing the two-letter species
-identifier, which is called *species_id*.
+~~~
+Index([u'id', u'ISSN-L', u'ISSNs', u'PublisherId', u'Journal_Title'], dtype='object')
+~~~
+{: .output}
 
-Now that we know the fields with the common species ID attributes in each
-DataFrame, we are almost ready to join our data. However, since there are
-[different types of joins](http://blog.codinghorror.com/a-visual-explanation-of-sql-joins/), we
-also need to decide which type of join makes sense for our analysis.
+~~~
+articles_sub.columns
+~~~
+{: .source}
+
+~~~
+Index([u'id', u'Title', u'Authors', u'DOI', u'URL', u'Subjects', u'ISSNs',
+       u'Citation', u'LanguageId', u'LicenceId', u'Author_Count',
+       u'First_Author', u'Citation_Count', u'Day', u'Month', u'Year'],
+      dtype='object')
+~~~
+{: .output}
+
+In our example, the join key is the column containing the ISSNs code, called
+*ISSNs*.
+
+Now that we know the fields which links the two data frames, we are almost ready
+to join our data. However, since there are [different types of joins](http://blog.codinghorror.com/a-visual-explanation-of-sql-joins/),
+we also need to decide which type of join makes sense for our analysis.
 
 ## Inner joins
 
@@ -256,69 +258,70 @@ The pandas function for performing joins is called *merge* and an Inner join is
 the default option:  
 
 ~~~
-merged_inner = pd.merge(left=survey_sub,right=species_sub, left_on='species_id', right_on='species_id')
-# in this case *species_id* is the only column name in  both dataframes, so if we skippd *left_on*
+merged_inner = pd.merge(left=articles_sub,right=journals_sub, left_on='ISSNs', right_on='ISSNs')
+# in this case *ISSNs* is the only column name in  both dataframes, so if we skip *left_on*
 # and *right_on* arguments we would still get the same result
 
 # what's the size of the output data?
 merged_inner.shape
+~~~
+{: .source}
+
+~~~
+(4, 20)
+~~~
+{: .output}
+
+~~~
 merged_inner
 ~~~
 {: .source}
 
 ~~~
-   record_id  month  day  year  plot_id species_id sex  hindfoot_length  \
-0          1      7   16  1977        2         NL   M               32   
-1          2      7   16  1977        3         NL   M               33   
-2          3      7   16  1977        2         DM   F               37   
-3          4      7   16  1977        7         DM   M               36   
-4          5      7   16  1977        3         DM   M               35   
-5          8      7   16  1977        1         DM   M               37   
-6          9      7   16  1977        1         DM   F               34   
-7          7      7   16  1977        2         PE   F              NaN   
-
-   weight       genus   species    taxa  
-0     NaN     Neotoma  albigula  Rodent  
-1     NaN     Neotoma  albigula  Rodent  
-2     NaN   Dipodomys  merriami  Rodent  
-3     NaN   Dipodomys  merriami  Rodent  
-4     NaN   Dipodomys  merriami  Rodent  
-5     NaN   Dipodomys  merriami  Rodent  
-6     NaN   Dipodomys  merriami  Rodent  
-7     NaN  Peromyscus  eremicus  Rodent  
+   id_x                                              Title  \
+0     0   The Fisher Thermodynamics of Quasi-Probabilities   
+1     1  Aflatoxin Contamination of the Milk Supply: A ...   
+2     6  Ionic Liquids as Carbene Catalyst Precursors i...   
+3     9            Imaging of HCC—Current State of the Art   
+...
+      ISSN-L  PublisherId Journal_Title  
+0  1099-4300            2       Entropy  
+1  2077-0472            2   Agriculture  
+2  2073-4344            2     Catalysts  
+3  2075-4418            2   Diagnostics  
 ~~~
 {: .output}
 
-The result of an inner join of *survey_sub* and *species_sub* is a new DataFrame
-that contains the combined set of columns from *survey_sub* and *species_sub*. It
+The result of an inner join of *articles_sub* and *journals_sub* is a new DataFrame
+that contains the combined set of columns from *articles_sub* and *journals_sub*. It
 *only* contains rows that have two-letter species codes that are the same in
-both the *survey_sub* and *species_sub* DataFrames. In other words, if a row in
-*survey_sub* has a value of *species_id* that does *not* appear in the *species_id*
-column of *species*, it will not be included in the DataFrame returned by an
-inner join.  Similarly, if a row in *species_sub* has a value of *species_id*
-that does *not* appear in the *species_id* column of *survey_sub*, that row will not
+both the *articles_sub* and *journals_sub* DataFrames. In other words, if a row in
+*articles_sub* has a value of *ISSNs* that does *not* appear in the *journals_sub*,
+it will not be included in the DataFrame returned by an
+inner join.  Similarly, if a row in *journals_sub* has a value of *ISSNs*
+that does *not* appear in *articles_sub*, that row will not
 be included in the DataFrame returned by an inner join.
 
 The two DataFrames that we want to join are passed to the *merge* function using
-the *left* and *right* argument. The *left_on='species'* argument tells *merge*
-to use the *species_id* column as the join key from *survey_sub* (the *left*
-DataFrame). Similarly , the *right_on='species_id'* argument tells *merge* to
-use the *species_id* column as the join key from *species_sub* (the *right*
+the *left* and *right* argument. The *left_on='ISSNs'* argument tells *merge*
+to use the *ISSNs* column as the join key from *articles_sub* (the *left*
+DataFrame). Similarly , the *right_on='ISSNs'* argument tells *merge* to
+use the *ISSNs* column as the join key from *journals_sub* (the *right*
 DataFrame). For inner joins, the order of the *left* and *right* arguments does
 not matter.
 
-The result *merged_inner* DataFrame contains all of the columns from *survey_sub*
-(record id, month, day, etc.) as well as all the columns from *species_sub*
-(species_id, genus, species, and taxa).
+The result *merged_inner* DataFrame contains all of the columns from *articles_sub*
+(record id, month, day, etc.) as well as all the columns from *journals_sub*
+(ISSNs, PublisherId, Journal_Title).
 
-Notice that *merged_inner* has fewer rows than *survey_sub*. This is an
-indication that there were rows in *surveys_df* with value(s) for *species_id* that
-do not exist as value(s) for *species_id* in *species_df*.
+Notice that *merged_inner* has fewer rows than *articles_sub*. This is an
+indication that there were rows in *articles_sub* with value(s) for *ISSNs* that
+do not exist as value(s) for *ISSNs* in *journals_sub*.
 
 ## Left joins
 
-What if we want to add information from *species_sub* to *survey_sub* without
-losing any of the information from *survey_sub*? In this case, we use a different
+What if we want to add information from *journals_sub* to *articles_sub* without
+losing any of the information from *articles_sub*? In this case, we use a different
 type of join called a "left outer join", or a "left join".
 
 Like an inner join, a left join uses join keys to combine two DataFrames. Unlike
@@ -337,63 +340,75 @@ A left join is performed in pandas by calling the same *merge* function used for
 inner join, but using the *how='left'* argument:
 
 ~~~
-merged_left = pd.merge(left=survey_sub,right=species_sub, how='left', left_on='species_id', right_on='species_id')
+merged_left = pd.merge(left=articles_sub,right=journals_sub, how='left', left_on='ISSNs', right_on='ISSNs')
 merged_left
 ~~~
 {: .source}
 
 ~~~
-   record_id  month  day  year  plot_id species_id sex  hindfoot_length  \
-0          1      7   16  1977        2         NL   M               32   
-1          2      7   16  1977        3         NL   M               33   
-2          3      7   16  1977        2         DM   F               37   
-3          4      7   16  1977        7         DM   M               36   
-4          5      7   16  1977        3         DM   M               35   
-5          6      7   16  1977        1         PF   M               14   
-6          7      7   16  1977        2         PE   F              NaN   
-7          8      7   16  1977        1         DM   M               37   
-8          9      7   16  1977        1         DM   F               34   
-9         10      7   16  1977        6         PF   F               20   
+   id_x                                              Title  \
+0     0   The Fisher Thermodynamics of Quasi-Probabilities   
+1     1  Aflatoxin Contamination of the Milk Supply: A ...   
+2     2  Metagenomic Analysis of Upwelling-Affected Bra...   
+3     3  Synthesis and Reactivity of a Cerium(III) Scor...   
+4     4  Performance and Uncertainty Evaluation of Snow...   
+5     5  Dihydrochalcone Compounds Isolated from Crabap...   
+6     6  Ionic Liquids as Carbene Catalyst Precursors i...   
+7     7  Characterization of Aspartate Kinase from Cory...   
+8     8  Quaternifications and Extensions of Current Al...   
+9     9            Imaging of HCC—Current State of the Art   
 
-   weight       genus   species    taxa  
-0     NaN     Neotoma  albigula  Rodent  
-1     NaN     Neotoma  albigula  Rodent  
-2     NaN   Dipodomys  merriami  Rodent  
-3     NaN   Dipodomys  merriami  Rodent  
-4     NaN   Dipodomys  merriami  Rodent  
-5     NaN         NaN       NaN     NaN  
-6     NaN  Peromyscus  eremicus  Rodent  
-7     NaN   Dipodomys  merriami  Rodent  
-8     NaN   Dipodomys  merriami  Rodent  
-9     NaN         NaN       NaN     NaN  
+...
+
+      ISSN-L  PublisherId Journal_Title  
+0  1099-4300          2.0       Entropy  
+1  2077-0472          2.0   Agriculture  
+2        NaN          NaN           NaN  
+3        NaN          NaN           NaN  
+4        NaN          NaN           NaN  
+5        NaN          NaN           NaN  
+6  2073-4344          2.0     Catalysts  
+7        NaN          NaN           NaN  
+8        NaN          NaN           NaN  
+9  2075-4418          2.0   Diagnostics  
 ~~~
 {: .output}
 
 The result DataFrame from a left join (*merged_left*) looks very much like the
 result DataFrame from an inner join (*merged_inner*) in terms of the columns it
 contains. However, unlike *merged_inner*, *merged_left* contains the **same
-number of rows** as the original *survey_sub* DataFrame. When we inspect
+number of rows** as the original *articles_sub* DataFrame. When we inspect
 *merged_left*, we find there are rows where the information that should have
-come from *species_sub* (i.e., *species_id*, *genus*, and *taxa*) is
+come from *journals_sub* (i.e., *ISSN-L*, *PublisherId*, *Journal_Title*) is
 missing (they contain NaN values):
 
 ~~~
-merged_left[ pd.isnull(merged_left.genus) ]
+merged_left[ pd.isnull(merged_left.PublisherId) ]
 ~~~
 {: .source}
 ~~~
-   record_id  month  day  year  plot_id species_id sex  hindfoot_length  \
-5          6      7   16  1977        1         PF   M               14   
-9         10      7   16  1977        6         PF   F               20   
+   id_x                                              Title  \
+2     2  Metagenomic Analysis of Upwelling-Affected Bra...   
+3     3  Synthesis and Reactivity of a Cerium(III) Scor...   
+4     4  Performance and Uncertainty Evaluation of Snow...   
+5     5  Dihydrochalcone Compounds Isolated from Crabap...   
+7     7  Characterization of Aspartate Kinase from Cory...   
+8     8  Quaternifications and Extensions of Current Al...   
 
-   weight genus species taxa  
-5     NaN   NaN     NaN  NaN  
-9     NaN   NaN     NaN  NaN
+...
+
+  ISSN-L  PublisherId Journal_Title  
+2    NaN          NaN           NaN  
+3    NaN          NaN           NaN  
+4    NaN          NaN           NaN  
+5    NaN          NaN           NaN  
+7    NaN          NaN           NaN  
+8    NaN          NaN           NaN  
 ~~~
 {: .output}
 
-These rows are the ones where the value of *species_id* from *survey_sub* (in this
-case, *PF*) does not occur in *species_sub*.
+These rows are the ones where the value of *ISSNs* from *articles_sub* does not
+exist in *journals_sub*.
 
 
 ## Other join types
@@ -406,26 +421,16 @@ The pandas *merge* function supports two other join types:
   discarded.
 * Full (outer) join: Invoked by passing *how='outer'* as an argument. This join
   type returns the all pairwise combinations of rows from both DataFrames; i.e.,
-  the result DataFrame will *NaN* where data is missing in one of the dataframes. This join type is
-  very rarely used.
+  the result DataFrame will *NaN* where data is missing in one of the dataframes.
+  This join type is very rarely used.
 
 > ## Challenge 1
-> Create a new DataFrame by joining the contents of the *surveys.csv* and
-> *species.csv* tables. Then calculate and plot the distribution of:
->
-> 1. taxa by plot
-> 2. taxa by sex by plot
+> Create a new DataFrame by joining the contents of the *articles.csv* and
+> *journals.csv* tables. Are there any records with do not have ISSNs code?
 {: .challenge}
 
 > ## Challenge 2
 >
-> 1. In the data folder, there is a plot *CSV* that contains information about the
->    type associated with each plot. Use that data to summarize the number of
->    plots by plot type.
-> 2. Calculate a diversity index of your choice for control vs rodent exclosure
->    plots. The index should consider both species abundance and number of
->    species. You might choose to use the simple [biodiversity index described
->    here](http://www.amnh.org/explore/curriculum-collections/biodiversity-counts/plant-ecology/how-to-calculate-a-biodiversity-index)
->    which calculates diversity as:
->         the number of species in the plot / the total number of individuals in the plot = Biodiversity index.
+> The *publishers.csv* contains data the names of the publishers for each
+> journal. Create a DataFrame which also joins this data.
 {: .challenge}

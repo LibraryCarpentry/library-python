@@ -1,7 +1,7 @@
 ---
 title: "Data workflows and automation"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "How do we automate repetitive tasks?"
 objectives:
@@ -37,8 +37,8 @@ Let's write a simple for loop that simulates what a kid might see during a
 visit to the zoo:
 
 ~~~
->>> animals = ['lion', 'tiger', 'crocodile', 'vulture', 'hippo']
->>> print(animals)
+animals = ['lion', 'tiger', 'crocodile', 'vulture', 'hippo']
+print(animals)
 ~~~
 {: .source}
 ~~~
@@ -46,8 +46,8 @@ visit to the zoo:
 ~~~
 {: .output}
 ~~~
->>> for creature in animals:
-...    print(creature)
+for creature in animals:
+   print(creature)
 ~~~
 {: .source}
 ~~~
@@ -68,11 +68,11 @@ anything we like. After the loop finishes, the loop variable will still exist
 and will have the value of the last entry in the collection:
 
 ~~~
->>> animals = ['lion', 'tiger', 'crocodile', 'vulture', 'hippo']
->>> for creature in animals:
-...    pass
+animals = ['lion', 'tiger', 'crocodile', 'vulture', 'hippo']
+for creature in animals:
+   pass
 
->>> print('The loop variable is now: ' + creature)
+print('The loop variable is now: ' + creature)
 The loop variable is now: hippo
 ~~~
 {: .source}
@@ -92,9 +92,8 @@ the loop. The statement *pass* in the body of the loop just means "do nothing".
 
 ## Automating data processing using For Loops
 
-The file we've been using so far, *surveys.csv*, contains 25 years of data and is
-very large. We would like to separate the data for each year into a separate
-file.
+The file we've been using so far, *articles.csv*, contains 1 year of data.
+We would like to separate the data for each month into a separate file.
 
 Let's start by making a new directory inside the folder *data* to store all of
 these files using the module *os*:
@@ -102,7 +101,7 @@ these files using the module *os*:
 ~~~
 import os
 
-os.mkdir('data/yearly_files')
+os.mkdir('data/monthly_files')
 ~~~
 {: .source}
 
@@ -110,18 +109,14 @@ The command *os.mkdir* is equivalent to *mkdir* in the shell. Just so we are
 sure, we can check that the new directory was created within the *data* folder:
 
 ~~~
->>> os.listdir('data')
+os.listdir('data')
 ~~~
 {: .source}
 ~~~
-['plots.csv',
- 'portal_mammals.sqlite',
- 'species.csv',
- 'survey2001.csv',
- 'survey2002.csv',
- 'surveys.csv',
- 'surveys2002_temp.csv',
- 'yearly_files']
+['monthly_files',
+ 'doajarticlesample.zip',
+ 'doajarticlesample']
+
 ~~~
 {: .output}
 
@@ -130,19 +125,19 @@ The command *os.listdir* is equivalent to *ls* in the shell.
 In previous lessons, we saw how to use the library pandas to load the species
 data into memory as a DataFrame, how to select a subset of the data using some
 criteria, and how to write the DataFrame into a csv file. Let's write a script
-that performs those three steps in sequence for the year 2002:
+that performs those three steps in sequence for the month of january:
 
 ~~~
 import pandas as pd
 
 # Load the data into a DataFrame
-surveys_df = pd.read_csv('https://ndownloader.figshare.com/files/2292172')
+articles_df = pd.read_csv('articles.csv')
 
-# Select only data for 2002
-surveys2002 = surveys_df[surveys_df.year == 2002]
+# Select only data for January
+articles01 = articles_df[articles_df.Month == 1]
 
 # Write the new DataFrame to a csv file
-surveys2002.to_csv('data/yearly_files/surveys2002.csv')
+articles01.to_csv('data/monthly_files/articles01.csv')
 ~~~
 {: .source}
 
@@ -153,80 +148,58 @@ turn what we've just written into a loop that repeats the last two commands for
 every year in the dataset.
 
 Let's start by writing a loop that simply prints the names of the files we want
-to create - the dataset we are using covers 1977 through 2002, and we'll create
-a separate file for each of those years. Listing the filenames is a good way to
+to create - the dataset we are using one year and we'll create
+a separate file for each month of the year. Listing the filenames is a good way to
 confirm that the loop is behaving as we expect.
 
-We have seen that we can loop over a list of items, so we need a list of years
-to loop over. We can get the years in our DataFrame with:
+We have seen that we can loop over a list of items, so we need a list of months
+to loop over. We can get the months in our DataFrame with:
 
 ~~~
->>> surveys_df['year']
+articles_df['Month']
 ~~~
 {: .source}
-~~~
-0        1977
-1        1977
-2        1977
-3        1977
-         ...
-35545    2002
-35546    2002
-35547    2002
-35548    2002
-~~~
-{: .outout}
 
-but we want only unique years, which we can get using the *unique* function
+but we want only unique months, which we can get using the *unique* function
 which we have already seen.  
 
 ~~~
->>> surveys_df['year'].unique()
+articles_df['Month'].unique()
 ~~~
 {: .source}
 ~~~
-array([1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987,
-       1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-       1999, 2000, 2001, 2002], dtype=int64)
+array([11, 12,  8,  4, 10,  9,  7,  6,  5,  3,  2,  1])
 ~~~
 {: .output}
 
-Putting this into our for loop we get
-
+Of course, we know that years normally have 12 months, so we could be alternatively
+use:
 ~~~
->>> for year in surveys_df['year'].unique():
-...    filename='data/yearly_files/surveys' + str(year) + '.csv'
-...    print(filename)
-...
+range(1,13)
 ~~~
 {: .source}
+
+Putting this into our for loop we get
 ~~~
-data/yearly_files/surveys1977.csv
-data/yearly_files/surveys1978.csv
-data/yearly_files/surveys1979.csv
-data/yearly_files/surveys1980.csv
-data/yearly_files/surveys1981.csv
-data/yearly_files/surveys1982.csv
-data/yearly_files/surveys1983.csv
-data/yearly_files/surveys1984.csv
-data/yearly_files/surveys1985.csv
-data/yearly_files/surveys1986.csv
-data/yearly_files/surveys1987.csv
-data/yearly_files/surveys1988.csv
-data/yearly_files/surveys1989.csv
-data/yearly_files/surveys1990.csv
-data/yearly_files/surveys1991.csv
-data/yearly_files/surveys1992.csv
-data/yearly_files/surveys1993.csv
-data/yearly_files/surveys1994.csv
-data/yearly_files/surveys1995.csv
-data/yearly_files/surveys1996.csv
-data/yearly_files/surveys1997.csv
-data/yearly_files/surveys1998.csv
-data/yearly_files/surveys1999.csv
-data/yearly_files/surveys2000.csv
-data/yearly_files/surveys2001.csv
-data/yearly_files/surveys2002.csv
+for month in articles_df['Month'].unique():
+   filename = 'data/monthly_files/articles%02d.csv'%month
+   print(filename)
+~~~
+
+{: .source}
+~~~
+data/monthly_files/articles11.csv
+data/monthly_files/articles12.csv
+data/monthly_files/articles08.csv
+data/monthly_files/articles04.csv
+data/monthly_files/articles10.csv
+data/monthly_files/articles09.csv
+data/monthly_files/articles07.csv
+data/monthly_files/articles06.csv
+data/monthly_files/articles05.csv
+data/monthly_files/articles03.csv
+data/monthly_files/articles02.csv
+data/monthly_files/articles01.csv
 ~~~
 {: .output}
 
@@ -234,20 +207,17 @@ We can now add the rest of the steps we need to create separate text files:
 
 ~~~
 # Load the data into a DataFrame
-surveys_df = pd.read_csv('data/surveys.csv')
-
-for year in surveys_df['year'].unique():
-
-    # Select data for the year
-    surveys_year = surveys_df[surveys_df.year == year]
+for month in articles_df['Month'].unique():
+    # Select data for the month
+    articles_month = articles_df[articles_df.Month == month]
 
     # Write the new DataFrame to a csv file
-    filename = 'data/yearly_files/surveys' + str(year) + '.csv'
-    surveys_year.to_csv(filename)
+    filename = 'data/monthly_files/articles%02d.csv'%month
+    articles_month.to_csv(filename)
 ~~~
 {: .source}
 
-Look inside the *yearly_files* directory and check a couple of the files you
+Look inside the *monthly_files* directory and check a couple of the files you
 just created to confirm that everything worked as expected.
 
 ## Writing Unique FileNames
@@ -255,43 +225,39 @@ just created to confirm that everything worked as expected.
 Notice that the code above created a unique filename for each year.
 
 ~~~
-filename = 'data/yearly_files/surveys' + str(year) + '.csv'
+filename = 'data/monthly_files/articles%02d.csv' % month
 ~~~
 {: .source}
 
 Let's break down the parts of this name:
 
 * The first part is simply some text that specifies the directory to store our
-  data file in (data/yearly_files/) and the first part of the file name
-  (surveys): *'data/yearly_files/surveys'*
-* We can concatenate this with the value of a variable, in this case *year* by
-  using the plus *+* sign and the variable we want to add to the file name: *+
-  str(year)*
-* Then we add the file extension as another text string: *+ '.csv'*
+  data file in (data/monthly_files/) and the first part of the file name
+  (articles): *'data/monthly_files/articles'*
+* The *%02d* part gives us zero padding for our numbers. We specify the number
+  we want to fill in using the *%* operator.
 
 Notice that we use single quotes to add text strings. The variable is not
 surrounded by quotes. This code produces the string
-*data/yearly_files/surveys2002.csv* which contains the path to the new filename
+*data/monthly_files/articles01.csv* which contains the path to the new filename
 AND the file name itself.
 
 > ## Challenge
 >
-> 1. Some of the surveys you saved are missing data (they have null values that
-> show up as NaN - Not A Number - in the DataFrames and do not show up in the text
-> files). Modify the for loop so that the entries with null values are not
-> included in the yearly files.
+> 1. Some of months seem to have more articles than others. Modify the for loop
+> so that the months with less than 100 articles are excluded.
 >
-> 2. What happens if there is no data for a year in the sequence (for example,
-> imagine we had used 1976 as the start year in *range*)?
+> 2. Let's say you want to look at data for each trimester of the years. How
+> would you modify your loop in order to generate a data file for every 3 month
+> period?
 >
-> 3. Let's say you only want to look at data from a given multiple of years. How would you modify your loop in order to > generate a data file for only every 5th year, starting from 1977?
->
-> 4. Instead of splitting out the data by years, a colleague wants to do analyses each species separately. How would you write a unique csv file for each species?
+> 3. How would you modify your query so you can generate a list of articles
+> for each publisher separately?
 {: .challenge}
 
 ## Building reusable and modular code with functions
 
-Suppose that separating large data files into individual yearly files is a task
+Suppose that separating large data files into individual monthly files is a task
 that we frequently have to perform. We could write a **for loop** like the one above
 every time we needed to do it but that would be time consuming and error prone.
 A more elegant solution would be to create a reusable tool that performs this
@@ -332,7 +298,7 @@ it is called, it includes a return statement at the end.
 This is how we call the function:
 
 ~~~
->>> product_of_inputs = this_is_the_function_name(2,5)
+product_of_inputs = this_is_the_function_name(2,5)
 ~~~
 {: .source}
 ~~~
@@ -340,7 +306,7 @@ The function arguments are: 2 5 (this is done inside the function!)
 ~~~
 {: .output}
 ~~~
->>> print('Their product is:', product_of_inputs, '(this is done outside the function!)')
+print('Their product is:', product_of_inputs, '(this is done outside the function!)')
 ~~~
 {: .source}
 ~~~
@@ -363,23 +329,23 @@ Their product is: 10 (this is done outside the function!)
 We can now turn our code for saving yearly data files into a function. There are
 many different "chunks" of this code that we can turn into functions, and we can
 even create functions that call other functions inside them. Let's first write a
-function that separates data for just one year and saves that data to a file:
+function that separates data for just one month and saves that data to a file:
 
 ~~~
-def one_year_csv_writer(this_year, all_data):
+def monthly_csv_writer(this_month, all_data):
     """
-    Writes a csv file for data from a given year.
+    Writes a csv file for data from a given month.
 
-    this_year --- year for which data is extracted
-    all_data --- DataFrame with multi-year data
+    this_month --- month for which data is extracted
+    all_data   --- DataFrame with full-year data
     """
 
-    # Select data for the year
-    surveys_year = all_data[all_data.year == this_year]
+    # Select data for the month
+    articles_month = all_data[all_data.Month == this_month]
 
     # Write the new DataFrame to a csv file
-    filename = 'data/yearly_files/function_surveys' + str(this_year) + '.csv'
-    surveys_year.to_csv(filename)
+    filename = 'data/monthly_files/function_articles%02d.csv' % this_month
+    articles_month.to_csv(filename)
 ~~~
 {: .source}
 
@@ -390,55 +356,55 @@ docstrings as a reminder of what the code does. Docstrings in functions also
 become part of their 'official' documentation:
 
 ~~~
-one_year_csv_writer?
+monthly_csv_writer?
 ~~~
 {: .source}
 
 ~~~
-one_year_csv_writer(2002,surveys_df)
+monthly_csv_writer(2,articles_df)
 ~~~
 {: .source}
 
-We changed the root of the name of the csv file so we can distinguish it from
-the one we wrote before. Check the *yearly_files* directory for the file. Did it
-do what you expect?
+We changed the root of the name of the csv file (so it is *function_articles*
+instead of *article*) so we can distinguish it from the one we wrote before.
+Check the *monthly_files* directory for the file. Did it do what you expect?
 
 What we really want to do, though, is create files for multiple years without
 having to request them one by one. Let's write another function that replaces
 the entire For loop by simply looping through a sequence of years and repeatedly
-calling the function we just wrote, *one_year_csv_writer*:
+calling the function we just wrote, *monthly_csv_writer*:
 
 
 ~~~
-def yearly_data_csv_writer(start_year, end_year, all_data):
+def yearly_data_csv_writer(start_month, end_month, all_data):
     """
     Writes separate csv files for each year of data.
 
-    start_year --- the first year of data we want
-    end_year --- the last year of data we want
-    all_data --- DataFrame with multi-year data
+    start_month --- the first month of data we want
+    end_month --- the last month of data we want
+    all_data --- DataFrame with full-year data
     """
 
-    # "end_year" is the last year of data we want to pull, so we loop to end_year+1
-    for year in range(start_year, end_year+1):
-        one_year_csv_writer(year, all_data)
+    # "end_month" is the last year of data we want to pull, so we loop to end_month+1
+    for month in range(start_month, end_month+1):
+        monthly_csv_writer(month, all_data)
 ~~~
 {: .source}
 
-Because people will naturally expect that the end year for the files is the last
-year with data, the for loop inside the function ends at *end_year + 1*. By
+Because people will naturally expect that the end month for the files is the last
+month with data, the for loop inside the function ends at *end_month + 1*. By
 writing the entire loop into a function, we've made a reusable tool for whenever
-we need to break a large data file into yearly files. Because we can specify the
-first and last year for which we want files, we can even use this function to
-create files for a subset of the years available. This is how we call this
+we need to break a large data file into monthly files. Because we can specify the
+first and last month for which we want files, we can even use this function to
+create files for a subset of the months available. This is how we call this
 function:
 
 ~~~
 # Load the data into a DataFrame
-surveys_df = pd.read_csv('data/surveys.csv')
+articles_df = pd.read_csv('data/surveys.csv')
 
 # Create csv files
-yearly_data_csv_writer(1977, 2002, surveys_df)
+yearly_data_csv_writer(4, 6, articles_df)
 ~~~
 {: .source}
 
@@ -455,13 +421,13 @@ output to change.
 >    directory where the files will be written and the root of the file name.
 >    Create a new set of files with a different name in a different directory.
 > 2. How could you use the function *yearly_data_csv_writer* to create a csv file
->    for only one year? (Hint: think about the syntax for *range*)
-> 3. Make the functions return a list of the files they have written. There are
->    many ways you can do this (and you should try them all!): either of the
->    functions can print to screen, either can use a return statement to give back
->    numbers or strings to their function call, or you can use some combination of
->    the two. You could also try using the *os* library to list the contents of
->    directories.
+>    for only one month? (Hint: think about the syntax for *range*)
+> 3. Make the functions return a list of the names of the files which have been
+>    written. There are many ways you can do this (and you should try them
+>    all!): either of the functions can print to screen, either can use a
+>    return statement to give back numbers or strings to their function call,
+>    or you can use some combination of the two. You could also try using the
+>    *os* library to list the contents of directories.
 > 4. Explore what happens when variables are declared inside each of the functions
 >    versus in the main (non-indented) body of your code. What is the scope of the
 >    variables (where are they visible)? What happens when they have the same name
@@ -471,78 +437,85 @@ output to change.
 The functions we wrote demand that we give them a value for every argument.
 Ideally, we would like these functions to be as flexible and independent as
 possible. Let's modify the function *yearly_data_csv_writer* so that the
-*start_year* and *end_year* default to the full range of the data if they are
+*start_month* and *end_month* default to the full range of the data if they are
 not supplied by the user. Arguments can be given default values with an equal
 sign in the function declaration. Any arguments in the function without default
 values (here, *all_data*) is a required argument and MUST come before the
 argument with default values (which are optional in the function call).
 
 ~~~
-def yearly_data_arg_test(all_data, start_year = 1977, end_year = 2002):
+def yearly_data_arg_test(all_data, start_month = 1, end_month = 12):
     """
     Modified from yearly_data_csv_writer to test default argument values!
 
-    start_year --- the first year of data we want --- default: 1977
-    end_year --- the last year of data we want --- default: 2002
-    all_data --- DataFrame with multi-year data
+    start_month --- the first month of data we want --- default: 1
+    end_month --- the last month of data we want --- default: 12
+    all_data --- DataFrame with full-year data
     """
 
-    return start_year, end_year
+    return start_month, end_month
 
 
-start,end = yearly_data_arg_test (surveys_df, 1988, 1993)
+start,end = yearly_data_arg_test (articles_df, 4, 6)
 print('Both optional arguments:\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df)
+start,end = yearly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 ~~~
 {: .source}
 
 ~~~
-Both optional arguments:	1988 1993
-Default values:			1977 2002
+Both optional arguments:	4 6
+Default values:			1 12
 ~~~
 {: .output}
 
 The "\t" in the *print* statements are tabs, used to make the text align and be
 easier to read.
 
-But what if our dataset doesn't start in 1977 and end in 2002? We can modify the
-function so that it looks for the start and end years in the dataset if those
+But what if our dataset doesn't start in 1 and end in 12? We can modify the
+function so that it looks for the start and end months in the dataset if those
 dates are not provided:
 
 ~~~
-def yearly_data_arg_test(all_data, start_year = None, end_year = None):
+def yearly_data_arg_test(all_data, start_month = None, end_month = None):
     """
     Modified from yearly_data_csv_writer to test default argument values!
 
-    start_year --- the first year of data we want --- default: None - check all_data
-    end_year --- the last year of data we want --- default: None - check all_data
-    all_data --- DataFrame with multi-year data
+    start_month --- the first month of data we want --- default: None - check all_data
+    end_month --- the last month of data we want --- default: None - check all_data
+    all_data --- DataFrame with full-year data
     """
 
-    if not start_year:
-        start_year = min(all_data.year)
-    if not end_year:
-        end_year = max(all_data.year)
+    if not start_month:
+        start_month = min(all_data.Month)
+    if not end_month:
+        end_month = max(all_data.Month)
 
-    return start_year, end_year
+    return start_month, end_month
 
 
-start,end = yearly_data_arg_test (surveys_df, 1988, 1993)
+start,end = yearly_data_arg_test (articles_df, 4, 6)
 print('Both optional arguments:\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df)
+start,end = yearly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 ~~~
 {: .source}
 ~~~
-Both optional arguments:	1988 1993
-Default values:			1977 2002
+Both optional arguments:	4 6
+Default values:			1 12
 ~~~
 {: .output}
 
-The default values of the *start_year* and *end_year* arguments in the function
+> ## Challenge
+> We got the same result because our data set does start with 1 and end with 12.
+> How would you slice the dataset, so we have a different result (for example,
+> the last 6 months of the year).
+>
+{: .challenge}
+
+The default values of the *start_month* and *end_month* arguments in the function
 *yearly_data_arg_test* are now *None*. This is a build-it constant in Python
 that indicates the absence of a value - essentially, that the variable exists in
 the namespace of the function (the directory of variable names) but that it
@@ -556,16 +529,16 @@ doesn't correspond to any existing object.
 > 2. Compare the behavior of the function *yearly_data_arg_test* when the
 > arguments have *None* as a default and when they do not have default values.
 >
-> 3. What happens if you only include a value for *start_year* in the function
-> call? Can you write the function call with only a value for *end_year*? (Hint:
+> 3. What happens if you only include a value for *start_month* in the function
+> call? Can you write the function call with only a value for *end_month*? (Hint:
 > think about how the function must be assigning values to each of the arguments -
 > this is related to the need to put the arguments without default values before
 > those with default values in the function definition!)
 {: .challenge}
 
-The body of the test function now has two conditional loops (if loops) that
-check the values of *start_year* and *end_year*. If loops execute the body of
-the loop when some condition is met. They commonly look something like this:
+The body of the test function now has two conditional statements (*if* statemens) that
+check the values of *start_month* and *end_month*. *If* statements execute the body of
+the statement when some condition is met. They commonly look something like this:
 
 ~~~
 a = 5
@@ -592,74 +565,74 @@ a is a positive number
 Change the value of *a* to see how this function works. The statement *elif*
 means "else if", and all of the conditional statements must end in a colon.
 
-The if loops in the function *yearly_data_arg_test* check whether there is an
-object associated with the variable names *start_year* and *end_year*. If those
-variables are *None*, the if loops return the boolean *True* and execute whaever
+The *if* statements in the function *yearly_data_arg_test* check whether there is an
+object associated with the variable names *start_month* and *end_month*. If those
+variables are *None*, the if statements return the boolean *True* and execute whatever
 is in their body. On the other hand, if the variable names are associated with
-some value (they got a number in the function call), the if loops return *False*
+some value (they got a number in the function call), the *if* statements return *False*
 and do not execute. The opposite conditional statements, which would return
 *True* if the variables were associated with objects (if they had received value
-in the function call), would be *if start_year* and *if end_year*.
+in the function call), would be *if start_month* and *if end_month*.
 
 As we've written it so far, the function *yearly_data_arg_test* associates
 values in the function call with arguments in the function definition just based
 in their order. If the function gets only two values in the function call, the
-first one will be associated with *all_data* and the second with *start_year*,
+first one will be associated with *all_data* and the second with *start_month*,
 regardless of what we intended them to be. We can get around this problem by
 calling the function using keyword arguments, where each of the arguments in the
 function definition is associated with a keyword and the function call passes
 values to the function using these keywords:
 
 ~~~
-def yearly_data_arg_test(all_data, start_year = None, end_year = None):
+def yearly_data_arg_test(all_data, start_month = None, end_month = None):
     """
     Modified from yearly_data_csv_writer to test default argument values!
 
-    start_year --- the first year of data we want --- default: None - check all_data
-    end_year --- the last year of data we want --- default: None - check all_data
-    all_data --- DataFrame with multi-year data
+    start_month --- the first month of data we want --- default: None - check all_data
+    end_month --- the last month of data we want --- default: None - check all_data
+    all_data --- DataFrame with full-year data
     """
 
-    if not start_year:
-        start_year = min(all_data.year)
-    if not end_year:
-        end_year = max(all_data.year)
+    if not start_month:
+        start_month = min(all_data.Month)
+    if not end_month:
+        end_month = max(all_data.Month)
 
-    return start_year, end_year
+    return start_month, end_month
 
 
-start,end = yearly_data_arg_test (surveys_df)
+start,end = yearly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df, 1988, 1993)
+start,end = yearly_data_arg_test (articles_df, 4, 6)
 print('No keywords:\t\t\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df, start_year = 1988, end_year = 1993)
+start,end = yearly_data_arg_test (articles_df, start_month = 4, end_month = 6)
 print('Both keywords, in order:\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df, end_year = 1993, start_year = 1988)
+start,end = yearly_data_arg_test (articles_df, end_month = 6, start_month = 4)
 print('Both keywords, flipped:\t\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df, start_year = 1988)
+start,end = yearly_data_arg_test (articles_df, start_month = 4)
 print('One keyword, default end:\t', start, end)
 
-start,end = yearly_data_arg_test (surveys_df, end_year = 1993)
+start,end = yearly_data_arg_test (articles_df, end_month = 6)
 print('One keyword, default start:\t', start, end)
 ~~~
 {: .source}
 ~~~
-Default values:			1977 2002
-No keywords:			1988 1993
-Both keywords, in order:	1988 1993
-Both keywords, flipped:		1988 1993
-One keyword, default end:	1988 2002
-One keyword, default start:	1977 1993
+Default values:			1 12
+No keywords:			4 6
+Both keywords, in order:	4 6
+Both keywords, flipped:		4 6
+One keyword, default end:	4 12
+One keyword, default start:	6 12
 ~~~
 {: .output}
 
 > ## Challenge
 >
-> 1. Rewrite the *one_year_csv_writer* and *yearly_data_csv_writer* functions to
+> 1. Rewrite the *monthly_csv_writer* and *yearly_data_csv_writer* functions to
 > have keyword arguments with default values
 >
 > 2. Modify the functions so that they don't create yearly files if there is no

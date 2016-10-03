@@ -75,14 +75,15 @@ same *surveys.csv* dataset that we've used in previous lessons.
 
 ~~~
 # note that pd.read_csv is used because we imported pandas as pd
-surveys_df = pd.read_csv("https://ndownloader.figshare.com/files/2292172")
+articles_df = pd.read_csv("doaj-article-sample.csv")
+articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
 ~~~
 {: .source}
 
 Remember that we can check the type of an object like this:
 
 ~~~
-type(surveys_df)
+type(articles_df)
 ~~~
 {: .source}
 
@@ -96,7 +97,7 @@ the type of one column in a DataFrame using the syntax
 *dataFrameName[column_name].dtype*:
 
 ~~~
-surveys_df['sex'].dtype
+articles_df['Language'].dtype
 ~~~
 {: .source}
 
@@ -109,7 +110,7 @@ A type 'O' just stands for "object" which in Pandas' world is a string
 (characters).
 
 ~~~
-surveys_df['record_id'].dtype
+articles_df['AuthorCount'].dtype
 ~~~
 {: .source}
 
@@ -123,31 +124,42 @@ as a 64 bit integer. We can use the *dat.dtypes* command to view the data type
 for each column in a DataFrame (all at once).
 
 ~~~
-surveys_df.dtypes
+articles_df.dtypes
 ~~~
 {: .source}
 
 which **returns**:
 
 ~~~
-record_id            int64
-month                int64
-day                  int64
-year                 int64
-plot_id              int64
-species_id          object
-sex                 object
-hindfoot_length    float64
-weight             float64
+Title          object
+Authors        object
+DOI            object
+URL            object
+Date           object
+Language       object
+Subjects       object
+ISSNs          object
+Publisher      object
+Citation       object
+Licence        object
+AuthorCount     int64
 dtype: object
 ~~~
 {: .output}
 
-Note that most of the columns in our Survey data are of type *int64*. This means
-that they are 64 bit integers. But the weight column is a floating point value
-which means it contains decimals. The *species_id* and *sex* columns are objects which
-means they contain strings.
+Note that most of the columns in our Articles data are of type *object*. This means
+that they are strings. But the *AuthorCount* column is a numeric value which means
+we can do calculations on it. Which other columns would be useful to have as numbers?
 
+One obvious candidate is the *Date* column, which we could easily split into 3
+separate columns: *Day*, *Month* and *Year*:
+
+~~~
+articles_df['Day'] = articles_df['Date'].apply(lambda date: int(date.split('/')[0]))
+articles_df['Month'] = articles_df['Date'].apply(lambda date: int(date.split('/')[1]))
+articles_df['Year'] = articles_df['Date'].apply(lambda date: int(date.split('/')[2]))
+~~~
+{: .source}
 
 ## Working With Integers and Floats
 
@@ -224,16 +236,16 @@ float(b)
 ~~~
 {: .output}
 
-# Working With Our Survey Data
+# Working With Our Articles Data
 
 Getting back to our data, we can modify the format of values within our data, if
-we want. For instance, we could convert the *record_id* field to floating point
+we want. For instance, we could convert the *AuthorCount* field to floating point
 values.
 
 ~~~
-# convert the record_id field from an integer to a float
-surveys_df['record_id'] = surveys_df['record_id'].astype('float64')
-surveys_df['record_id'].dtype
+# convert the AuthorCount field from an integer to a float
+articles_df['AuthorCount'] = articles_df['AuthorCount'].astype('float64')
+articles_df['AuthorCount'].dtype
 ~~~
 {: .source}
 
@@ -242,35 +254,12 @@ dtype('float64')
 ~~~
 {: .output}
 
-What happens if we try to convert weight values to integers?
-
-~~~
-surveys_df['weight'].astype('int')
-~~~
-{: .source}
-
-Notice that this throws a value error: *ValueError: Cannot convert NA to
-integer*. If we look at the *weight* column in the surveys data we notice that
-there are NaN (**N** ot **a** **N** umber) values. *NaN* values are undefined
-values that cannot be represented mathematically. Pandas, for example, will read
-an empty cell in a CSV or Excel sheet as a NaN. NaNs have some desirable
-properties: if we were to average the *weight* column without replacing our NaNs,
-Python would know to skip over those cells.
-
-~~~
-surveys_df['weight'].mean()
-~~~
-{: .source}
-~~~
-42.672428212991356
-~~~
-{: .output}
 
 ## Missing Data Values - NaN
 
 Dealing with missing data values is always a challenge. It's sometimes hard to
 know why values are missing - was it because of a data entry error? Or data that
-someone was unable to collect? Should the value be 0? We need to know how
+someone was unable to collect? What value should we use? We need to know how
 missing values are represented in the dataset in order to make good decisions.
 If we're lucky, we have some metadata that will tell us more about how null
 values were handled.
@@ -287,49 +276,33 @@ in the future when you (or someone else) explores your data.
 
 Let's explore the NaN values in our data a bit further. Using the tools we
 learned in lesson 02, we can figure out how many rows contain NaN values for
-weight. We can also create a new subset from our data that only contains rows
-with weight values > 0 (ie select meaningful weight values):
+language. We can also create a new subset from our data that only contains rows
+with non null language (ie select meaningful weight values):
 
 ~~~
-len(surveys_df[pd.isnull(surveys_df.weight)])
-# how many rows have weight values?
-len(surveys_df[surveys_df.weight> 0])
+len(articles_df[articles_df['Language'].isnull()])
+# how many rows have a set language?
+len(articles_df[~articles_df['Language'].isnull()])
 ~~~
 {: .source}
 
-We can replace all NaN values with zeroes using the *.fillna()* method (after
-making a copy of the data so we don't lose our work):
+We can replace all null values with a given value (let's assume 'EN') using
+the *.fillna()* method (after making a copy of the data so we don't lose our work):
 
 ~~~
-df1 = surveys_df.copy()
+df1 = articles_df.copy()
 # fill all NaN values with 0
-df1['weight'] = df1['weight'].fillna(0)
+df1['Language'] = df1['Language'].fillna('EN')
 ~~~
 {: .source}
 
-However NaN and 0 yield different analysis results. The mean value when NaN
-values are replaced with 0 is different from when NaN values are simply thrown
-out or ignored.
+> ## Challenge
+> Verify that *df1* indeed has a language value for all articles.
+{: .challenge}
 
-~~~
-df1['weight'].mean()
-~~~
-{: .source}
-~~~
-38.751976145601844
-~~~
-{: .output}
-
-We can fill NaN values with any value that we chose. The code below fills all
-NaN values with a mean for all weight values.
-
-~~~
- df1['weight'] = surveys_df['weight'].fillna(surveys_df['weight'].mean())
-~~~
-{: .source}
-
-We could also chose to create a subset of our data, only keeping rows that do
-not contain NaN values.
+However we cannot know for certain that the articles in question are actually
+in English. We could also chose to create a subset of our data, only keeping
+rows that do not contain Null values.
 
 The point is to make conscious decisions about how to manage missing data. This
 is where we think about how our data will be used and how these values will
@@ -338,7 +311,6 @@ impact the scientific conclusions made from the data.
 Python gives us all of the tools that we need to account for these issues. We
 just need to be cautious about how the decisions that we make impact scientific
 results.
-
 
 ## Recap
 

@@ -1,7 +1,7 @@
 ---
 title: "Plotting Your Data - Matplotlib"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "How can you visualize your data?"
 objectives:
@@ -22,14 +22,13 @@ For this tutorial, we'll use Pandas.
 ## Loading Data
 
 For a more detailed tutorial on loading data, see
-[this lesson on beginning with Pandas](https://github.com/datacarpentry/datacarpentry/blob/master/lessons/python/01-starting-with-data.md)
+[the lesson on beginning with Pandas]({{ page.root }}/01-starting-with-data/)
 
 For now, we'll just use a simple statement to load the surveys data.
 
 ~~~
 import pandas as pd
-df = pd.read_csv('https://ndownloader.figshare.com/files/2292172',
-                  index_col='record_id')
+articles_df = pd.read_csv('articles.csv')
 ~~~
 {: .source}
 
@@ -43,21 +42,24 @@ import matplotlib.pyplot as plt
 ~~~
 {: .source}
 
-Matplotlib can easily plot a set of data even larger than *surveys.csv*, but for
-this example, we'll take the first 50 of the ~35000 entries that are in
-*surveys.csv.* For a more detailed tutorial on slicing data, see
-[this lesson on masking and grouping](https://github.com/datacarpentry/datacarpentry/blob/master/lessons/python/05-masking-and-groups.md).
+There's a column in *articles.csv* named "Author_Count" which would make an excellent
+value to plot.
+
+Matplotlib can easily plot a set of data even larger than *articles.csv*, but for
+this example, we'll take the first 50 of the ~1000 entries that are in
+*articles.csv.* For a more detailed tutorial on slicing data, see
+[this lesson on masking and grouping]({{ page.root }}/05-masking-and-groups/).
 
 ~~~
-small_dataset = df[:50]
+small_dataset = articles_df[:50]
 ~~~
 {: .source}
 
-There's a column in *surveys.csv* named "plot_id" which would make an excellent
+There's a column in *articles.csv* named "plot_id" which would make an excellent
 value to plot.
 
 ~~~
-plot_data = small_dataset['plot_id']
+plot_data = small_dataset['Author_Count']
 ~~~
 {: .source}
 
@@ -108,7 +110,7 @@ set like so:
 ~~~
 plt.xlabel('Index')
 plt.ylabel('Plot Value')
-plt.title('The Plot Value From surveys.csv')
+plt.title('The Plot Value From articles.csv')
 ~~~
 {: .source}
 
@@ -209,7 +211,6 @@ plt.plot(plot_data, linewidth=3)
 The default linewidth is 1. A linewidth of 3 would be 3 times as thick as the
 default. Likewise, a linewidth of .75 would be 3/4 of the thickness of the
 default.
-
 
 
 ## Other types of plots
@@ -393,16 +394,16 @@ plt.boxplot(plot_data.values)
 ~~~
 {: .source}
 
-# A Realistic Example
+# A Realistic Example -- TODO
 
 You may have noticed there's some more data beyond just the plot value in
-*surveys.csv*. Let's plot the plot value and group them by the sex value.
+*articles.csv*. Let's plot the plot value and group them by the sex value.
 A dot plot would be ideal for this.
 
 Pandas has some built-in tools that make it easy to group your data.
 
 ~~~
-grouped_plot_data = small_dataset.groupby('sex')
+grouped_plot_data = articles_df.groupBy('Month')
 ~~~
 {: .source}
 
@@ -412,21 +413,18 @@ is formatted like so:
 ~~~
 ('group_name', pandas data pertaining to the group)
 ~~~
-{: .source}
+{: .output}
 
-Keep in mind we need different colors and labels for each group. So we can plot
-the data like so:
+We can check the size of each data group using the *len()* function. So we can
+plot our data like so:
 
 ~~~
-colors = ['r', 'g'] #we'll be cycling through these colors
-color_index = 0
-for group in grouped_plot_data:
-    color = colors[color_index]
-    group_label = group[0]
-    group_data = group[1]
-    plt.plot(group_data['plot_id'], color=color, label=group_label)
-    color_index += 1
-plt.legend()
+for group_label, group_data in grouped_plot_data:
+    plt.plot(group_label, len(group_data), 'o')
+plt.xlim(0, 13)
+plt.xlabel('Month')
+plt.ylabel('Number of articles')
+plt.title('Article count per month')
 ~~~
 {: .source}
 

@@ -1,7 +1,7 @@
 ---
 title: "Accessing SQLite Databases Using Python & Pandas"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "How to interact with SQL from Python?"
 objectives:
@@ -39,12 +39,12 @@ SQLite databases.
 import sqlite3
 
 # Create a SQL connection to our SQLite database
-con = sqlite3.connect("data/portal_mammals.sqlite")
+con = sqlite3.connect("data/doajarticlesample.sqlite")
 
 cur = con.cursor()
 
 # the result of a "cursor.execute" can be iterated over by row
-for row in cur.execute('SELECT * FROM species;'):
+for row in cur.execute('SELECT * FROM languages'):
     print(row)
 
 #Be sure to close the connection.
@@ -63,8 +63,8 @@ import pandas as pd
 import sqlite3
 
 # Read sqlite query results into a pandas DataFrame
-con = sqlite3.connect("data/portal_mammals.sqlite")
-df = pd.read_sql_query("SELECT * from surveys", con)
+con = sqlite3.connect("data/doajarticlesample.sqlite")
+df = pd.read_sql_query("SELECT * from languages", con)
 
 # verify that result of SQL query is stored in the dataframe
 print(df.head())
@@ -77,7 +77,7 @@ con.close()
 
 Storing your data in an SQLite database can provide substantial performance
 improvements when reading/writing compared to CSV. The difference in performance
-becomes more noticable as the size of the dataset grows (see for example [these
+becomes more noticeable as the size of the dataset grows (see for example [these
 benchmarks]).
 
 [these benchmarks]: http://sebastianraschka.com/Articles/2013_sqlite_database.html#results-and-conclusions
@@ -85,11 +85,11 @@ benchmarks]).
 
 > ## Challenges
 >
-> 1. Create a query that contains survey data collected between 1998 - 2001
->  for observations of sex "male" or "female" that includes observation's genus and
-> species and plot type for the sample. How many records are returned?
+> 1. Create a query that contains articles data including (JOIN) journal,
+> publisher and language information. Filter your query to include only
+> articles in English. How many records are returned?
 >
-> 2. Create a dataframe that contains the total number of observations (count)
-> made for all years, and sum of observation weights for each plot, ordered by
-> plot ID.
+> 2. Use your DataFrame to plot the number of articles per month.
+>
+> 3. Which other information from this collection can you visualize?
 {: .challenge}

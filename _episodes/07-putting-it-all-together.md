@@ -1,7 +1,7 @@
 ---
 title: "Data Ingest & Visualization - Matplotlib & Pandas"
 teaching: ??
-exercises: 0
+exercises: ??
 questions:
 - "How does it all tie in together?"
 objectives:

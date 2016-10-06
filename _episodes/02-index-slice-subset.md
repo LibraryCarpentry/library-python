@@ -28,8 +28,7 @@ exercise. Let's reopen it:
 # first make sure pandas is loaded
 import pandas as pd
 # read in the survey csv
-articles_df = pd.read_csv("doaj-article-sample.csv")
-articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
+articles_df = pd.read_csv("articles.csv")
 ~~~
 {: .source}
 
@@ -70,9 +69,9 @@ order. This is useful when we need to reorganize our data.
 
 ~~~
 # select the species and plot columns from the DataFrame
-articles_df[['Authors', 'Publisher']]
+articles_df[['Authors', 'ISSNs']]
 # what happens when you flip the order?
-articles_df[['Publisher', 'Authors']]
+articles_df[['ISSNs', 'Authors']]
 #what happens if you ask for a column that doesn't exist?
 articles_df['column_that_does_not_exist']
 ~~~
@@ -177,8 +176,7 @@ It creates a new variable y that refers to the **same** object x refers to. This
 DataFrame we use the syntax y=x.copy(). But before we have to read the articles_df again because the current version contains the unintentional changes made to the first 3 columns.
 
 ~~~
-articles_df = pd.read_csv("doaj-article-sample.csv")
-articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
+articles_df = pd.read_csv("articles.csv")
 articles_copy = articles_df.copy()
 ~~~
 {: .source}
@@ -203,21 +201,20 @@ articles_df.iloc[0:3, 1:4]
 which gives:
 
 ~~~
+                                               Title  \
+0   The Fisher Thermodynamics of Quasi-Probabilities   
+1  Aflatoxin Contamination of the Milk Supply: A ...   
+2  Metagenomic Analysis of Upwelling-Affected Bra...   
+
                                              Authors  \
 0                     Flavia Pennini|Angelo Plastino   
 1                         Naveed Aslam|Peter C. Wynn   
 2  Rafael R. C. Cuadrat|Juliano C. Cury|Alberto M...   
 
-                          DOI  \
-0           10.3390/e17127853   
-1  10.3390/agriculture5041172   
-2       10.3390/ijms161226101   
-
-                                                 URL  
-0  https://doaj.org/article/b75e8d5cca3f46cbbd63e...  
-1  https://doaj.org/article/0edc5af6672641c0bd456...  
-2  https://doaj.org/article/d9fe469f75a0442382b84...  
-
+                          DOI  
+0           10.3390/e17127853  
+1  10.3390/agriculture5041172  
+2       10.3390/ijms161226101  
 ~~~
 {: .output}
 
@@ -231,7 +228,7 @@ Let's next explore some other ways to index and select subsets of data:
 # select all columns for rows of index values 0 and 10
 articles_df.loc[[0, 10], :]
 # what does this do?
-articles_df.loc[0, ['Authors', 'Publisher', 'Title']]
+articles_df.loc[0, ['Authors', 'ISSNs', 'Title']]
 
 # What happens when you type the code below?
 articles_df.loc[[0, 10, 35549], :]
@@ -250,7 +247,7 @@ column location within the data frame using the *iloc* function:
 
 
 ~~~
-articles_df.iloc[2,0]
+articles_df.iloc[2,1]
 ~~~
 {: .source}
 
@@ -287,39 +284,38 @@ We can also select a subset of our data using criteria. For example, we can
 select all rows that have a single author.
 
 ~~~
-articles_df[articles_df.AuthorCount==1]
+articles_df[articles_df.Author_Count==1]
 ~~~
 {: .source}
 
 Which produces the following output:
 
 ~~~
-                                                 Title  \
-15   Performance-Based Cognitive Screening Instrume...   
-27   Comments on Ekino et al. Cloning and Character...   
-64   The Ubiquity of Humanity and Textuality in Hum...   
-70   Effect of Water Nutrient Pollution on Long-Ter...   
+      id                                              Title  \
+15    15  Performance-Based Cognitive Screening Instrume...   
+27    27  Comments on Ekino et al. Cloning and Character...   
+64    64  The Ubiquity of Humanity and Textuality in Hum...   
 ...
-     AuthorCount  
-15             1  
-27             1  
+     Author_Count             First_Author  Citation_Count  Day  Month  Year  
+15              1         Andrew J. Larner               4    1     11  2015  
+27              1           Leopoldo Palma               4    1     11  2015  
 ...
-773            1  
-827            1  
+827             1        Natale Perchiazzi               9    1      3  2015  
+932             1          Anaelle Tilborg               9    1     11  2015  
 ~~~
 {: .output}
 
 Or we can select all rows that do not contain the year 2002.
 
 ~~~
-articles_df[articles_df.year != 2002]
+articles_df[articles_df.Year != 2002]
 ~~~
 {: .source}
 
 We can define sets of criteria too:
 
 ~~~
-articles_df[(articles_df.year >= 1980) & (articles_df.year <= 1985)]
+articles_df[(articles_df.Year >= 1980) & (articles_df.Year <= 1985)]
 ~~~
 {: .source}
 
@@ -338,17 +334,17 @@ with selecting various subsets of the "surveys" data.
 > ## Challenge Activities
 >
 > 1. Select a subset of rows in the *articles_df* DataFrame that contain articles
->    from at least 2 authors in Spanish. How many rows did you end up with?
->    What did your neighbor get?
+>    from at least 2 authors in Spanish (LanguageId=3). How many rows did you
+>    end up with? What did your neighbor get?
 > 2. You can use the *isin* command in python to query a DataFrame based upon a
 >    list of values as follows:
->    *articles_df[articles_df['Publisher'].isin([listGoesHere])]*. Use the *isin* function
->    to find all articles from particular publishers. How many records did you get?
+>    *articles_df[articles_df['ISSNs'].isin([listGoesHere])]*. Use the *isin* function
+>    to find all articles from particular ISSNs. How many records did you get?
 > 3. Experiment with other queries. Create a query that finds all rows with
->    an *AuthorCount* of 0 or less.
+>    an *Author_Count* of 0 or less.
 > 4. The *~* symbol in Python can be used to return the OPPOSITE of the
 >    selection that you specify in python. It is equivalent to **is not in**.
->    Write a query that selects all rows that are NOT in English.
+>    Write a query that selects all rows that are NOT in English (LanguageId=1).
 {: .challenge}
 
 # Using Masks
@@ -400,7 +396,7 @@ We can run *isnull* on a particular column too. What does the code below do?
 
 ~~~
 # what does this do?
-empty_lang = articles_df[pd.isnull(articles_df['Language'])]
+no_doi = articles_df[pd.isnull(articles_df['DOI'])]
 ~~~
 {: .source}
 

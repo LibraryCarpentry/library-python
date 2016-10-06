@@ -75,8 +75,7 @@ same *surveys.csv* dataset that we've used in previous lessons.
 
 ~~~
 # note that pd.read_csv is used because we imported pandas as pd
-articles_df = pd.read_csv("doaj-article-sample.csv")
-articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
+articles_df = pd.read_csv("articles.csv")
 ~~~
 {: .source}
 
@@ -97,7 +96,7 @@ the type of one column in a DataFrame using the syntax
 *dataFrameName[column_name].dtype*:
 
 ~~~
-articles_df['Language'].dtype
+articles_df['Title'].dtype
 ~~~
 {: .source}
 
@@ -110,7 +109,7 @@ A type 'O' just stands for "object" which in Pandas' world is a string
 (characters).
 
 ~~~
-articles_df['AuthorCount'].dtype
+articles_df['Author_Count'].dtype
 ~~~
 {: .source}
 
@@ -131,35 +130,26 @@ articles_df.dtypes
 which **returns**:
 
 ~~~
-Title          object
-Authors        object
-DOI            object
-URL            object
-Date           object
-Language       object
-Subjects       object
-ISSNs          object
-Publisher      object
-Citation       object
-Licence        object
-AuthorCount     int64
+id                 int64
+Title             object
+Authors           object
+DOI               object
+URL               object
+Subjects          object
+ISSNs             object
+Citation          object
+LanguageId         int64
+LicenceId          int64
+Author_Count       int64
+First_Author      object
+Citation_Count     int64
+Day                int64
+Month              int64
+Year               int64
 dtype: object
 ~~~
 {: .output}
 
-Note that most of the columns in our Articles data are of type *object*. This means
-that they are strings. But the *AuthorCount* column is a numeric value which means
-we can do calculations on it. Which other columns would be useful to have as numbers?
-
-One obvious candidate is the *Date* column, which we could easily split into 3
-separate columns: *Day*, *Month* and *Year*:
-
-~~~
-articles_df['Day'] = articles_df['Date'].apply(lambda date: int(date.split('/')[0]))
-articles_df['Month'] = articles_df['Date'].apply(lambda date: int(date.split('/')[1]))
-articles_df['Year'] = articles_df['Date'].apply(lambda date: int(date.split('/')[2]))
-~~~
-{: .source}
 
 ## Working With Integers and Floats
 
@@ -239,13 +229,13 @@ float(b)
 # Working With Our Articles Data
 
 Getting back to our data, we can modify the format of values within our data, if
-we want. For instance, we could convert the *AuthorCount* field to floating point
+we want. For instance, we could convert the *Author_Count* field to floating point
 values.
 
 ~~~
-# convert the AuthorCount field from an integer to a float
-articles_df['AuthorCount'] = articles_df['AuthorCount'].astype('float64')
-articles_df['AuthorCount'].dtype
+# convert the Author_Count field from an integer to a float
+articles_df['Author_Count'] = articles_df['Author_Count'].astype('float64')
+articles_df['Author_Count'].dtype
 ~~~
 {: .source}
 
@@ -280,9 +270,9 @@ language. We can also create a new subset from our data that only contains rows
 with non null language (ie select meaningful weight values):
 
 ~~~
-len(articles_df[articles_df['Language'].isnull()])
+len(articles_df[articles_df['DOI'].isnull()])
 # how many rows have a set language?
-len(articles_df[~articles_df['Language'].isnull()])
+len(articles_df[~articles_df['DOI'].isnull()])
 ~~~
 {: .source}
 
@@ -292,7 +282,7 @@ the *.fillna()* method (after making a copy of the data so we don't lose our wor
 ~~~
 df1 = articles_df.copy()
 # fill all NaN values with 0
-df1['Language'] = df1['Language'].fillna('EN')
+df1['DOI'] = df1['DOI'].fillna('UNKNOWN')
 ~~~
 {: .source}
 

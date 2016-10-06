@@ -24,10 +24,12 @@ training: do-we-have-a-repo-of-python-training-resources ?
 
 ## Presentation of the survey data
 
-For this lesson, we will be using the DOAJ article sample data, available at [doaj-article-sample.csv](https://github.com/data-lessons/library-openrefine/raw/gh-pages/data/doaj-article-sample.csv).
+For this lesson, we will be using the DOAJ article sample data, available on [FigShare](https://dx.doi.org/10.6084/m9.figshare.3409471). Download this zip
+and extract it on your working directory on a meaningful location (e.g. create
+a folder called *data/*)
 
-This data set is a list of published articles. The dataset is stored as a *.csv*
-file: each row holds information for a single article, and the columns represent:
+This data set is a list of published articles. The dataset is stored as *.csv*
+files: each row holds information for a single article, and the columns represent:
 
 | Column           | Description                        |
 |------------------|------------------------------------|
@@ -35,14 +37,17 @@ file: each row holds information for a single article, and the columns represent
 | Authors          | Author (or authors)                |
 | DOI              | DOI                                |
 | URL              | URL                                |
-| Date             | Publication date                   |
-| Language         | Language in which it is written    |
 | Subjects         | List of subject key words          |
 | ISSNs            | ISSNs code                         |
-| Publisher        | Name of the publisher              |
 | Citation         | Citation information               |
-| Licence          | Copyright licence                  |
-
+| LanguageId       | Language identifier                |
+| LicenceId        | License identifier                 |
+| Author_Count     | Number of authors of the article   |
+| First_Author     | Name of the first author           |
+| Citation_Count   | Number times it has been cited     |
+| Day              | Day of publication                 |
+| Month            | Month of publication               |
+| Year             | Year of publication                |
 
 ## About (Software) Libraries
 A library in Python contains a set of tools (called functions) that perform
@@ -81,20 +86,17 @@ For this lesson we will be using the DOAJ article data.
 
 We are analyzing the articles published in a particular field of study. The
 data set is stored in *.csv* (comma separated values) format. Within
-the *.csv* files, each row holds information for a single article, and the
-columns represent: Title, Authors, DOI, URL, Date, Language, Subjects, ISSNs,
-Publisher, Citation and Licence.
+the *.csv* files, each row holds information for a single article.
 
 The first few rows of our first file look like this:
 
 ~~~
-Title	Authors	DOI	URL	Date	Language	Subjects	ISSNs	Publisher	Citation	Licence
-The Fish...	Flavia P...	10.33...	https://...	01/11/2015	English	Fisher i...	1099-4300	MDPI AG	Entropy, V...	CC BY...
-Aflatoxi...	Naveed A...	10.33...	https://...	01/11/2015	English	aflatoxi...	2077-0472	MDPI AG	Agricultur...	CC BY...
-Metageno...	Rafael R...	10.33...	https://...	01/11/2015	English	PKS|NRPS...	1422-0067	MDPI AG	Internatio...	CC BY...
-Synthesi...	Fabrizio...	10.33...	https://...	01/11/2015	EN	lanthani...	2304-6740	MDPI AG	Inorganics...	CC BY...
-Performa...	Magali T...	10.33...	https://...	01/11/2015	EN	snow mod...	2306-5338	MDPI AG	Hydrology,...	CC BY...
-Dihydroc...	Xiaoxiao...	10.33...	https://...	01/11/2015	English	Malus cr...	1420-3049	MDPI AG	Molecules,...	CC BY...
+id,Title,Authors,DOI,URL,Subjects,ISSNs,Citation,LanguageId,LicenceId,Author_Count,First_Author,Citation_Count,Day,Month,Year
+0,The Fisher Thermodynamics of Quasi-Probabilities,Flavia Pennini|Angelo Plastino,10.3390/e17127853,https://doaj.org/article/b75e8d5cca3f46cbbd63e91be5b32412,Fisher information|quasi-probabilities|complementarity|Physics|QC1-999|Science|Q,1099-4300,"Entropy, Vol 17, Iss 12, Pp 7848-7858 (2015)",1,1,2,Flavia Pennini,4,1,11,2015
+1,Aflatoxin Contamination of the Milk Supply: A Pakistan Perspective,Naveed Aslam|Peter C. Wynn,10.3390/agriculture5041172,https://doaj.org/article/0edc5af6672641c0bd45608812a34f9e,aflatoxins|AFM1|AFB1|milk marketing chains|hepatocellular carcinoma|Agriculture (General)|S1-972|Agriculture|S,2077-0472,"Agriculture (Basel), Vol 5, Iss 4, Pp 1172-1182 (2015)",1,1,2,Naveed Aslam,5,1,11,2015
+2,Metagenomic Analysis of Upwelling-Affected Brazilian Coastal Seawater Reveals Sequence Domains of Type I PKS and Modular NRPS,Rafael R. C. Cuadrat|Juliano C. Cury|Alberto M. R. Dávila,10.3390/ijms161226101,https://doaj.org/article/d9fe469f75a0442382b84ba4f50007ee,PKS|NRPS|metagenomics|environmental genomics|upwelling|coastal environment|Chemistry|QD1-999|Science|Q,1422-0067,"International Journal of Molecular Sciences, Vol 16, Iss 12, Pp 28285-28295 (2015)",1,1,3,Rafael R. C. Cuadrat,8,1,11,2015
+3,"Synthesis and Reactivity of a Cerium(III) Scorpionate Complex Containing a Redox Non-Innocent 2,2′-Bipyridine Ligand",Fabrizio Ortu|Hao Zhu|Marie-Emmanuelle Boulon|David P. Mills,10.3390/inorganics3040534,https://doaj.org/article/95606ed39deb4f43b96f7e6308ad15d3,lanthanide|cerium|scorpionate|tris(pyrazolyl)borate|radical|redox non-innocent|Inorganic chemistry|QD146-197,2304-6740,"Inorganics (Basel), Vol 3, Iss 4, Pp 534-553 (2015)",1,1,4,Fabrizio Ortu,5,1,11,2015
+
 ~~~
 {: .output}
 (quite difficult to read and interpret as it is...)
@@ -147,29 +149,36 @@ os.getcwd()
 os.chdir("YOURPathHere")
 
 # note that pd.read_csv is used because we imported pandas as pd
-pd.read_csv("doaj-article-sample.csv")
+pd.read_csv("articles.csv")
 ~~~
 {: .source}
 
 The above command yields the **output** below:
 
 ~~~
-                                                  Title  \
-0      The Fisher Thermodynamics of Quasi-Probabilities   
-1     Aflatoxin Contamination of the Milk Supply: A ...   
-2     Metagenomic Analysis of Upwelling-Affected Bra...   
-3     Synthesis and Reactivity of a Cerium(III) Scor...   
-4     Performance and Uncertainty Evaluation of Snow...   
-5     Dihydrochalcone Compounds Isolated from Crabap...   
+        id                                              Title  \
+0        0   The Fisher Thermodynamics of Quasi-Probabilities   
+1        1  Aflatoxin Contamination of the Milk Supply: A ...   
+2        2  Metagenomic Analysis of Upwelling-Affected Bra...   
+3        3  Synthesis and Reactivity of a Cerium(III) Scor...   
+...
+997    997  Crystal structure of bis(3-bromopyridine-κN)bi...   
+998    998  Crystal structure of 4,4′-(ethane-1,2-diyl)bis...   
+999    999  Crystal structure of (Z)-4-[1-(4-acetylanilino...   
+1000  1000  Metagenomic Analysis of Upwelling-Affected Bra...
 
-....
+...
 
-997   Acta Crystallographica Section E: Crystallogra...   CC BY  
-998   Acta Crystallographica Section E: Crystallogra...   CC BY  
-999   Acta Crystallographica Section E: Crystallogra...   CC BY  
-1000  International Journal of Molecular Sciences, V...   CC BY  
+      Month  Year  
+0        11  2015  
+1        11  2015  
+2        11  2015  
+...
+998       1  2015  
+999       1  2015  
+1000     11  2015  
 
-[1001 rows x 11 columns]
+[1001 rows x 16 columns]
 ~~~
 {: .output}
 
@@ -184,7 +193,7 @@ or  *data*. We can create a new  object with a variable name by assigning a valu
 Let's call the imported survey data *articles_df*:
 
 ~~~
-articles_df = pd.read_csv("doaj-article-sample.csv")
+articles_df = pd.read_csv("articles.csv")
 ~~~
 {: .source}
 
@@ -197,7 +206,7 @@ articles_df
 ~~~
 {: .source}
 
-which prints contents like above
+which prints contents like above.
 
 ## Manipulating Our Species Survey Data
 
@@ -225,18 +234,24 @@ articles_df.dtypes
 which returns:
 
 ~~~
-Title        object
-Authors      object
-DOI          object
-URL          object
-Date         object
-Language     object
-Subjects     object
-ISSNs        object
-Publisher    object
-Citation     object
-Licence      object
+id                 int64
+Title             object
+Authors           object
+DOI               object
+URL               object
+Subjects          object
+ISSNs             object
+Citation          object
+LanguageId         int64
+LicenceId          int64
+Author_Count       int64
+First_Author      object
+Citation_Count     int64
+Day                int64
+Month              int64
+Year               int64
 dtype: object
+
 ~~~
 {: .output}
 
@@ -278,8 +293,9 @@ articles_df.columns.values
 which **returns**:
 
 ~~~
-array(['Title', 'Authors', 'DOI', 'URL', 'Date', 'Language', 'Subjects',
-       'ISSNs', 'Publisher', 'Citation', 'Licence'], dtype=object)
+array(['id', 'Title', 'Authors', 'DOI', 'URL', 'Subjects', 'ISSNs',
+       'Citation', 'LanguageId', 'LicenceId', 'Author_Count',
+       'First_Author', 'Citation_Count', 'Day', 'Month', 'Year'], dtype=object)
 ~~~
 {: .output}
 
@@ -287,40 +303,27 @@ Let's get a list of all the publishers. The *pd.unique* function tells us all of
 the unique values in the *Publisher* column.
 
 ~~~
-pd.unique(articles_df['Publisher'])
+pd.unique(articles_df['Month'])
 ~~~
 {: .source}
 
 which returns:
 
 ~~~
-array(['MDPI AG', 'MDPI AG ', 'Aurel Vlaicu University Editing House',
-       'Society of Pharmaceutical Technocrats',
-       'Consejo Superior de Investigaciones Cient\xc3\xadficas',
-       'Akshantala Enterprises', 'International Union of Crystallography'], dtype=object)
+array([11, 12,  8,  4, 10,  9,  7,  6,  5,  3,  2,  1])
 ~~~
 {: .source}
 
 > ## Challenge
 >
-> Create a list of unique Licences found in the surveys data.
-> Call it *licence_types*. How many unique licences are there in the data?
+> Create a list of unique ISSNs found in the articles data.
+> Call it *licence_types*. How many unique ISSNs are there in the data?
 {: .challenge}
 
 # Groups in Pandas
 At this point, our DataFrame has only String types. Some of the grouping
 operations work different for numeric types (e.g. calculating averages). So we
 will create a new column on our data frame, which includes the author count.
-
-We notice that our *Author* column contains the name of the authors of an article
-separates by the *|* character. So we can *split* each cell on the *Author* column
-by the *|* character, and *count* how many parts we have. We can do this for the
-whole column at once using the *pd.apply* method. Don't worry too much if this
-seems like a bit of magic at the moment, it will become clearer later on.
-~~~
-articles_df['AuthorCount'] = articles_df.Authors.apply(lambda authors: len(authors.split('|')))
-~~~
-{: .source}
 
 We often want to calculate summary statistics grouped by subsets or attributes
 within fields of our data. For example, we might want to know the number of
@@ -330,29 +333,33 @@ We can calculate basic statistics for all records in a single column using the
 syntax below:
 
 ~~~
-articles_df['Publisher'].describe()
+articles_df['Citation_Count'].describe()
 ~~~
 {: .source}
 gives:
 
 ~~~
-count                                       1001
-unique                                         7
-top       International Union of Crystallography
-freq                                         858
-Name: Publisher, dtype: object
+count    1001.000000
+mean        9.023976
+std         1.655121
+min         3.000000
+25%         9.000000
+50%        10.000000
+75%        10.000000
+max        10.000000
+Name: Citation_Count, dtype: float64
 ~~~
 {: .source}
 
 We can also extract one specific metric if we wish:
 ~~~
-articles_df['Publisher'].unique()
-articles_df['Publisher'].count()
+articles_df['ISSNs'].unique()
+articles_df['ISSNs'].count()
 
-articles_df['AuthorCount'].min()
-articles_df['AuthorCount'].max()
-articles_df['AuthorCount'].mean()
-articles_df['AuthorCount'].std()
+articles_df['Citation_Count'].min()
+articles_df['Citation_Count'].max()
+articles_df['Citation_Count'].mean()
+articles_df['Citation_Count'].std()
 ~~~
 {: .source}
 
@@ -361,8 +368,8 @@ use Pandas' *.groupby* method. Once we've created a groupby DataFrame, we
 can quickly calculate summary statistics by a group of our choice.
 
 ~~~
-# Group data by sex
-sorted = articles_df.groupby('Language')
+# Group data by Language
+byLang = articles_df.groupby('LanguageId')
 ~~~
 {: .source}
 
@@ -373,21 +380,28 @@ numeric data.
 
 ~~~
 # summary statistics for all numeric columns by Language
-sorted.describe()
+byLang.describe()
 # provide the mean for each numeric column by Language
-sorted.mean()
+byLang.mean()
 ~~~
 {: .source}
 
-**OUTPUT:**
+OUTPUT:
 
 ~~~
-          AuthorCount
-Language             
-EN           3.977038
-ES           4.142857
-English      4.308411
-FR           5.000000
+                    id  LicenceId  Author_Count  Citation_Count  Day  \
+LanguageId                                                             
+1           510.004090   1.052147      4.013292        9.137014  1.0   
+2            52.533333   1.000000      3.333333        4.333333  1.0   
+3           116.571429   4.000000      4.142857        4.000000  1.0   
+4           112.000000   4.000000      5.000000        4.000000  1.0   
+
+                Month    Year  
+LanguageId                     
+1            6.332311  2015.0  
+2           11.000000  2015.0  
+3           12.000000  2015.0  
+4           12.000000  2015.0  
 ~~~
 {: .output}
 
@@ -396,33 +410,34 @@ summary stats.
 
 > ## Challenge
 >
-> 1. How many articles are written in which language?
+> 1. How many articles are written in for each ISSNs?
 > 2. What happens when you group by two columns using the following syntax and
 >     then grab mean values:
 >
 > ~~~
-> sorted2 = articles_df.groupby(['Language', 'Publisher'])
-> sorted2.mean()
+> byMultiple = articles_df.groupby(['LanguageId', 'ISSNs'])
+> byMultiple.mean()
 > ~~~
 > {: .source}
 >
-> 3. Summarize author counts for each publisher in your data. HINT: you can use the
+> 3. Summarize author counts for each ISSNs in your data. HINT: you can use the
 >    following syntax to only create summary statistics for one column in your data
->    *by_publisher['AuthorCount'].describe()*
+>    *by_ISSNs['Author_Count'].describe()*
 {: .challenge}
 
 > ## Did you get #3 right?
 > A Snippet of the Output from challenge 3 looks like:
 > ~~~
-> Publisher                                             
-> Akshantala Enterprises                           count     13.000000
->                                                  mean       3.384615
->                                                  std        1.850156
->                                                  min        1.000000
->                                                  25%        2.000000
->                                                  50%        3.000000
->                                                  75%        4.000000
->                                                  max        8.000000
+> ISSNs                     
+> 0367-0449|1988-3250  count    11.000000
+>                      mean      4.000000
+>                      std       2.720294
+>                      min       2.000000
+>                      25%       2.000000
+>                      50%       3.000000
+>                      75%       5.000000
+>                      max       9.000000
+> 1099-4300            count     1.000000
 > ...
 > ~~~
 > {: .output}
@@ -435,14 +450,14 @@ ways, but we'll use *groupby* combined with a *count()* method.
 
 ~~~
 # count the number of samples by publisher
-article_counts = articles_df.groupby('Publisher')['Title'].count()
+article_counts = articles_df.groupby('ISSNs')['Title'].count()
 ~~~
 {: .source}
 
-Or, we can also count just the rows that have the publisher "MDPI AG":
+Or, we can also count just the rows that have the ISSN "1420-3049":
 
 ~~~
-articles_df.groupby('Publisher')['Title'].count()['MDPI AG']
+articles_df.groupby('ISSNs')['Title'].count()['1420-3049']
 ~~~
 {: .source}
 
@@ -455,14 +470,14 @@ calculated from our data.
 
 ~~~
 # multiply all author count values by 2
-articles_df['AuthorCount'] * 2
+articles_df['Author_Count'] * 2
 ~~~
 {: .source}
 
 
 > ## Another Challenge
 >
-> 1. What's another way to create a list of licences and associated *count* of the
+> 1. What's another way to create a list of licenses and associated *count* of the
 >    records in the data? Hint: you can perform *count*, *min*, etc functions on
 >    groupby DataFrames in the same way you can perform them on regular
 >    DataFrames.
@@ -481,13 +496,13 @@ article_counts.plot(kind='bar')
 ~~~
 {: .source}
 
-![Articles by Publisher Plot]({{ page.root }}/fig/articlesByPublisher.png)
-Weight by species plot
+![Articles by ISSN Plot]({{ page.root }}/fig/articlesByISSN.png)
+Articles by ISSN plot
 
 We can also look at how many articles were published in each language:
 
 ~~~
-language_count=articles_df.groupby('Language')['Title'].count()
+language_count = articles_df.groupby('LanguageId')['Title'].count()
 # let's plot that too
 language_count.plot(kind='bar');
 ~~~
@@ -501,9 +516,10 @@ language_count.plot(kind='bar');
 
 > ## Summary Plotting Challenge
 >
-> Create a stacked bar plot, with AuthorCount on the Y axis, and the stacked variable
-> being Language. The plot should show total authors by Language for each Publisher. Some
-> tips are below to help you solve this challenge:
+> Create a stacked bar plot, with Number of articles on the Y axis, and the
+> stacked variable being LicenceId. The plot should show total number of articles
+> by License for each monthPublisher. Some tips are below to help you solve this
+> challenge:
 >
 > * [For more on Pandas plots, visit this link.](http://pandas.pydata.org/pandas-docs/dev/generated/pandas.core.groupby.DataFrameGroupBy.plot.html)
 > * You can use the code that follows to create a stacked bar plot but the data to stack
@@ -542,31 +558,43 @@ language_count.plot(kind='bar');
 > for each plotting.  Try running *.unstack()* on some DataFrames above and see
 > what it yields.
 >
-> Start by transforming the grouped data (by publisher and language) into an
+> Start by transforming the grouped data (by LicenceId and Month) into an
 > unstacked layout, then create a stacked plot.
 >
 {:.challenge}
 
 > ## Solution to Summary Challenge
 >
-> First we group data by Publisher and by Language, and then calculate a total for each Publisher.
+> First we group data by Month and by LicenceId, and then calculate a total for
+> each Month.
 >
 > ~~~
-> by_pub_lang = articles_df.groupby(['Publisher','Language'])
-> pub_lang_count = by_pub_lang['AuthorCount'].sum()
+> by_month_lic = articles_df.groupby(['Month','LicenceId'])
+> month_lic_count = by_pub_lang.size()
 > ~~~
 > {: .source}
 >
 > This calculates the sums of weights for each language within each publisher as a table
 >
 > ~~~
-> Publisher                                        Language
-> Akshantala Enterprises                           English       44
-> Consejo Superior de Investigaciones Científicas  EN            10
->                                                  ES            29
->                                                  FR             5
-> International Union of Crystallography           EN          3412
-> ...
+> Month  LicenceId
+> 1      1             50
+> 2      1             96
+> 3      1             79
+> 4      1             69
+>        2              7
+> 5      1            107
+> 6      1             91
+> 7      1             94
+> 8      1             90
+>        2             13
+> 9      1             77
+> 10     1            104
+> 11     1             97
+>        2             10
+>        3              6
+> 12     4             11
+> dtype: int64
 > ~~~
 > {: .output}
 >
@@ -574,39 +602,44 @@ language_count.plot(kind='bar');
 > that each language contributed to each publisher.
 >
 > ~~~
-> by_pub_lang = articles_df.groupby(['Publisher','Language'])
-> pub_lang_count = by_pub_lang['AuthorCount'].sum()
-> pub_lang_count.unstack()
+> by_month_lic = articles_df.groupby(['Month','LicenceId'])
+> month_lic_count = by_pub_lang.size()
+> mlc = month_lic_count.unstack()
 > ~~~
 > {: .source}
 >
 > The *unstack* function above will display the following output:
 >
 > ~~~
-> Language                                             EN    ES  English   FR
-> Publisher                                                                  
-> Akshantala Enterprises                              NaN   NaN     44.0  NaN
-> Aurel Vlaicu University Editing House               NaN   NaN     36.0  NaN
-> Consejo Superior de Investigaciones Científicas    10.0  29.0      NaN  5.0
-> International Union of Crystallography           3412.0   NaN      NaN  NaN
-> MDPI AG                                            42.0   NaN    348.0  NaN
-> MDPI AG                                             NaN   NaN     12.0  NaN
-> Society of Pharmaceutical Technocrats               NaN   NaN     21.0  NaN
+> LicenceId   1    2    3    4
+> Month
+> 1          50  NaN  NaN  NaN
+> 2          96  NaN  NaN  NaN
+> 3          79  NaN  NaN  NaN
+> 4          69    7  NaN  NaN
+> 5         107  NaN  NaN  NaN
+> 6          91  NaN  NaN  NaN
+> 7          94  NaN  NaN  NaN
+> 8          90   13  NaN  NaN
+> 9          77  NaN  NaN  NaN
+> 10        104  NaN  NaN  NaN
+> 11         97   10    6  NaN
+> 12        NaN  NaN  NaN   11
 > ~~~
 > {: .output}
 >
-> Now, create a stacked bar plot with that data where the weights for each Publisher
-> are stacked by Language.
+> Now, create a stacked bar plot with that data where the article count for each
+> Month are stacked by License.
 >
 > Rather than display it as a table, we can plot the above data by stacking the
 > values of each Publisher as follows:
 >
 > ~~~
-> by_pub_lang = articles_df.groupby(['Publisher','Language'])
-> pub_lang_count = by_pub_lang['AuthorCount'].sum()
-> spc = pub_lang_count.unstack()
+> by_month_lic = articles_df.groupby(['Month','LicenceId'])
+> month_lic_count = by_pub_lang.size()
+> mlc = month_lic_count.unstack()
 >
-> s_plot = spc.plot(kind='bar',stacked=True,title="Total number of authors by Publisher and Language")
+> s_plot = mlc.plot(kind='bar',stacked=True,title="Total number of articles by Month and Licence")
 > s_plot.set_ylabel("Author Count")
 > s_plot.set_xlabel("Publisher");
 > ~~~

@@ -27,8 +27,8 @@ DataFrames](http://pandas.pydata.org/pandas-docs/stable/merging.html) including
 In these examples we will be using the same data set, but divided into different
 tables, which you can download from [figshare](https://figshare.com/articles/LC-articles/3409471)
 
-To work through the examples below, we first need to load the species and
-surveys files into pandas DataFrames. In iPython:
+To work through the examples below, we first need to load the articles and
+journals files into pandas DataFrames. In iPython:
 
 ~~~
 import pandas as pd

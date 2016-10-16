@@ -436,11 +436,13 @@ def sub_function(a, b):
 {: .source}
 
 When we call the function using it's name, the values we pass are assigned to the variables defined by the parameter names by position:
+
 ~~~
 z = sub_function(44, 2)
 print(z)
 ~~~
 {: .source}
+
 ~~~
 42
 ~~~
@@ -452,6 +454,7 @@ z = sub_function(a=44, b=2)
 print(z)
 ~~~
 {: .source}
+
 ~~~
 42
 ~~~
@@ -471,7 +474,9 @@ print(z)
 > print(sub_function(b=2, a=44))
 > ~~~
 > {: .source}
+> 
 > vs
+> 
 > ~~~
 > print(sub_function(2, 44))
 > ~~~

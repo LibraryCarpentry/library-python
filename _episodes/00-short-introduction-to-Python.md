@@ -449,6 +449,7 @@ print(z)
 {: .output}
 
 We can also use the parameter names when calling the function.
+
 ~~~
 z = sub_function(a=44, b=2)
 print(z)
@@ -470,6 +471,7 @@ print(z)
 > ## Parameter order
 > What do you think will happen if we change the order of the named parameters? 
 > What happens if you type:
+>
 > ~~~
 > print(sub_function(b=2, a=44))
 > ~~~

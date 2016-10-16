@@ -24,12 +24,13 @@ training: do-we-have-a-repo-of-python-training-resources ?
 
 ## Presentation of the DOAJ Articles data
 
-For this lesson, we will be using the Directory of Open Access Journals (DOAJ) article sample data, available on [FigShare](https://dx.doi.org/10.6084/m9.figshare.3409471). Download this zip
+For this lesson, we will be using Directory of Open Access Journals (DOAJ) article sample data, available on [FigShare](https://dx.doi.org/10.6084/m9.figshare.3409471). Download this zip
 and extract it on your working directory on a meaningful location (e.g. create
 a folder called *data/*)
 
 This data set is a list of published articles. The dataset is stored as *.csv*
-files: each row holds information for a single article, and the columns represent:
+(comma separated values) files: each row holds information for a single article,
+and the columns represent:
 
 | Column           | Description                        |
 |------------------|------------------------------------|
@@ -138,7 +139,7 @@ import pandas as pd
 
 Let's also import the [OS Library](https://docs.python.org/3/library/os.html).
 This library allows us to make sure we are in the correct working directory. If
-you are working in IPython Notebook, be sure to start the notebook in the
+you are working in IPython or Jupyter Notebook, be sure to start the notebook in the
 workshop repository.  If you didn't do that you can always set the working
 directory using the code below.
 
@@ -356,7 +357,7 @@ min         3.000000
 max        10.000000
 Name: Citation_Count, dtype: float64
 ~~~
-{: .source}
+{: .output}
 
 We can also extract one specific metric if we wish:
 ~~~
@@ -393,7 +394,7 @@ byLang.mean()
 ~~~
 {: .source}
 
-OUTPUT:
+gives this output:
 
 ~~~
                     id  LicenceId  Author_Count  Citation_Count  Day  \
@@ -578,7 +579,7 @@ language_count.plot(kind='bar');
 >
 > ~~~
 > by_month_lic = articles_df.groupby(['Month','LicenceId'])
-> month_lic_count = by_pub_lang.size()
+> month_lic_count = by_month_lic.size()
 > ~~~
 > {: .source}
 >

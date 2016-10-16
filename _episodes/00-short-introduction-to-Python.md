@@ -422,23 +422,58 @@ over dictionaries might appear random and can even change with time.
 
 ## Functions
 
+A **function** allows you to group code together for reuse and readability.
+
 Defining part of a program in Python as a function is done using the `def`
-keyword. For example a function that takes two arguments and returns their sum
+keyword. For example a function named `sub_function` which has two parameters `a` and `b` and returns their sum
 can be defined as:
 
 ~~~
-def add_function(a, b):
-    result = a + b
+def sub_function(a, b):
+    result = a - b
     return result
-
-z = add_function(20, 22)
-print(z)
-42
 ~~~
 {: .source}
+
+When we call the function using it's name, the values we pass are assigned to the variables defined by the parameter names by position:
+~~~
+z = sub_function(44, 2)
+print(z)
+~~~
+{: .source}
+~~~
+42
+~~~
+{: .output}
+
+We can also use the parameter names when calling the function.
+~~~
+z = sub_function(a=44, b=2)
+print(z)
+~~~
+{: .source}
+~~~
+42
+~~~
+{: .output}
+
 
 > ## Notice
 >* definition starts with `def`
 >* function body is indented
 >* `return` keyword precedes returned value
 {: .callout}
+
+> ## Parameter order
+> What do you think will happen if we change the order of the named parameters? 
+> What happens if you type:
+> ~~~
+> print(sub_function(b=2, a=44))
+> ~~~
+> {: .source}
+> vs
+> ~~~
+> print(sub_function(2, 44))
+> ~~~
+> {: .source}
+{: .challenge}

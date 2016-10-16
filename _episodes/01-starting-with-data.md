@@ -360,6 +360,7 @@ Name: Citation_Count, dtype: float64
 {: .output}
 
 We can also extract one specific metric if we wish:
+
 ~~~
 articles_df['ISSNs'].unique()
 articles_df['ISSNs'].count()
@@ -436,6 +437,7 @@ summary stats.
 
 > ## Did you get #3 right?
 > A Snippet of the Output from challenge 3 looks like:
+> 
 > ~~~
 > ISSNs                     
 > 0367-0449|1988-3250  count    11.000000

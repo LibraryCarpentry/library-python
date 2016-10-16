@@ -20,11 +20,11 @@ keypoints:
 training: do-we-have-a-repo-of-python-training-resources ?
 ---
 
-# Working With Pandas DataFrames in Python
+# Working with Pandas DataFrames in Python
 
-## Presentation of the survey data
+## Presentation of the DOAJ Articles data
 
-For this lesson, we will be using the DOAJ article sample data, available on [FigShare](https://dx.doi.org/10.6084/m9.figshare.3409471). Download this zip
+For this lesson, we will be using the Directory of Open Access Journals (DOAJ) article sample data, available on [FigShare](https://dx.doi.org/10.6084/m9.figshare.3409471). Download this zip
 and extract it on your working directory on a meaningful location (e.g. create
 a folder called *data/*)
 
@@ -63,10 +63,10 @@ Pandas library provides data structures, produces high quality plots with
 that use [NumPy](http://www.numpy.org/) (which is another Python library) arrays.
 
 Python doesn't load all of the libraries available to it by default. We have to
-add an *import* statement to our code in order to use library functions. To import
-a library, we use the syntax *import libraryName*. If we want to give the
-library a nickname to shorten the command, we can add *as nickNameHere*.  An
-example of importing the pandas library using the common nickname *pd* is below.
+add an `import` statement to our code in order to use library functions. To import
+a library, we use the syntax `import libraryName`. If we want to give the
+library a nickname to shorten the command, we can add `as nickNameHere`.  An
+example of importing the pandas library using the common nickname `pd` is below.
 
 
 ~~~
@@ -75,20 +75,20 @@ import pandas as pd
 {: .source}
 
 Each time we call a function that's in a library, we use the syntax
-*LibraryName.FunctionName*. Adding the library name with a *.* before the
+`LibraryName.FunctionName`. Adding the library name with a `.` before the
 function name tells Python where to find the function. In the example above, we
-have imported Pandas as *pd*. This means we don't have to type out *pandas* each
+have imported Pandas as `pd`. This means we don't have to type out `pandas` each
 time we call a Pandas function.
 
 ## Lesson Overview
 
-For this lesson we will be using the DOAJ article data.
+For this lesson we will be using the Directory of Open Access Journals (DOAJ) article data.
 
 We are analyzing the articles published in a particular field of study. The
 data set is stored in *.csv* (comma separated values) format. Within
 the *.csv* files, each row holds information for a single article.
 
-The first few rows of our first file look like this:
+The first few rows of our first file (articles.csv) look like this:
 
 ~~~
 id,Title,Authors,DOI,URL,Subjects,ISSNs,Citation,LanguageId,LicenceId,Author_Count,First_Author,Citation_Count,Day,Month,Year
@@ -107,19 +107,19 @@ id,Title,Authors,DOI,URL,Subjects,ISSNs,Citation,LanguageId,LicenceId,Author_Cou
 2. Calculate the average number of authors per article, for each publisher.
 3. Plot this information.
 
-We can automate the process above using Python. It's efficient to spend time
-building the code to perform these tasks because once it's built, we can use it
+We can automate the process above using Python. It is efficient to spend time
+building the code to perform these tasks because once it is built, we can use it
 over and over on different datasets that use a similar format. This makes our
 methods easily reproducible. We can also easily share our code with colleagues
 and they can replicate the same analysis.
 
-# Reading CSV Data Using Pandas
+# Reading CSV data using Pandas
 
-We will begin by locating and reading our survey data which are in CSV format.
-We can use Pandas' *read_csv* function to pull the file directly into a
+We will begin by locating and reading our survey data which are in CSV format (comma separated values).
+We can use Pandas' `read_csv` function to pull the file directly into a
 [DataFrame](http://pandas.pydata.org/pandas-docs/stable/dsintro.html#dataframe).
 
-## So What's a DataFrame?
+## So what's a DataFrame?
 
 A DataFrame is a 2-dimensional data structure that can store data of different
 types (including characters, integers, floating point values, factors and more)
@@ -128,7 +128,7 @@ R. A DataFrame always has an index (0-based). An index refers to the position of
 an element in the data structure.
 
 First, let's make sure the Python Pandas library is loaded. We will import
-Pandas using the nickname *pd*.  This is a common convention on the internet,
+Pandas using the nickname `pd`.  This is a common convention on the internet,
 so if you look up Pandas usage, you will often see it this way.
 
 ~~~
@@ -185,12 +185,12 @@ The above command yields the **output** below:
 We can see that there were 1,001 rows parsed. Each row has 11
 columns. The first column is the index of the DataFrame. The index is used to
 identify the position of the data, but it is not an actual column of the DataFrame.
-It looks like  the *read_csv* function in Pandas  read our file properly. However,
-we haven't saved any data to memory so we can work with it.We need to assign the
-DataFrame to a variable. Remember that a variable is a name for a value, such as *x*,
-or  *data*. We can create a new  object with a variable name by assigning a value to it using *=*.
+It looks like  the `read_csv` function in Pandas  read our file properly. However,
+we haven't saved any data to memory so we can work with it. We need to assign the
+DataFrame to a variable. Remember that a variable is a name for a value, such as `x`,
+or  `data`. We can create a new  object with a variable name by assigning a value to it using `=`.
 
-Let's call the imported survey data *articles_df*:
+Let's call the imported survey data `articles_df`:
 
 ~~~
 articles_df = pd.read_csv("articles.csv")
@@ -198,7 +198,7 @@ articles_df = pd.read_csv("articles.csv")
 {: .source}
 
 Notice when you assign the imported DataFrame to a variable, Python does not
-produce any output on the screen. We can print the value of the *articles_df*
+produce any output on the screen. We can print the value of the `articles_df`
 object by typing its name into the Python command prompt.
 
 ~~~
@@ -208,11 +208,11 @@ articles_df
 
 which prints contents like above.
 
-## Manipulating Our Species Survey Data
+## Manipulating our Articles data
 
 Now we can start manipulating our data. First, let's check the data type of the
-data stored in *articles_df* using the *type* method. The *type* method and
-*__class__* attribute tell us that *articles_df* is *<class 'pandas.core.frame.DataFrame'>*.
+data stored in `articles_df` using the `type` method. The `type` method and
+`__class__` attribute tell us that `articles_df` type is `<class 'pandas.core.frame.DataFrame'>`.
 
 ~~~
 type(articles_df)
@@ -220,10 +220,17 @@ type(articles_df)
 articles_df.__class__
 ~~~
 {: .source}
+~~~
+<class 'pandas.core.frame.DataFrame'>
+~~~
+{: .output}
 
-We can also enter *articles_df.dtypes* at our prompt to view the data type for each
-column in our DataFrame. *int64* represents numeric integer values - *int64* cells
-can not store decimals. *object* represents strings (letters and numbers). *float64*
+We can also enter `articles_df.dtypes` at our prompt to view the data type for each
+column in our DataFrame.
+* `int64` represents numeric integer values (`int64` cells
+can not store decimals).
+* `object` represents strings (letters and numbers).
+* `float64`
 represents numbers with decimals.
 
 ~~~
@@ -255,31 +262,30 @@ dtype: object
 ~~~
 {: .output}
 
-We'll talk a bit more about what the different formats mean in a different lesson.
+We'll talk a bit more about what the different data types mean later in [Data Types and Formats](/03-data-types-and-format/).
 
-### Useful Ways to View DataFrame objects in Python
+### Useful ways to view DataFrame objects in Python
 
 There are multiple methods that can be used to summarize and access the data
 stored in DataFrames. Let's try out a few. Note that we call the method by using
-the object name *articles_df.method*. So *articles_df.columns* provides an index
+the object name *articles_df.method*. So `articles_df.columns` provides an index
 of all of the column names in our DataFrame.
 
 > ## Try out the methods below to see what they return.
 >
-> 1. *articles_df.columns*.
-> 2. *articles_df.head()*. Also, what does *articles_df.head(15)* do?
-> 3. *articles_df.tail()*.
-> 4. *articles_df.shape*. Take note of the output of the shape method. What format does it return the shape of the DataFrame in?
+> 1. `articles_df.columns`.
+> 2. `articles_df.head()`. Also, what does `articles_df.head(15)` do?
+> 3. `articles_df.tail()`.
+> 4. `articles_df.shape`. Take note of the output of the shape method. What format does it return the shape of the DataFrame in?
 {: .challenge}
 
 HINT: [More on tuples, here](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences).
 
-## Calculating Statistics From Data In A Pandas DataFrame
+## Calculating statistics from data in a Pandas DataFrame
 
 We've read our data into Python. Next, let's perform some quick summary
-statistics to learn more about the data that we're working with. We might want
-to know how many animals were collected in each plot, or how many of each
-species were caught. We can perform summary stats quickly using groups. But
+statistics to learn more about the data that we're working with.
+We can perform summary stats quickly using groups. But
 first we need to figure out what we want to group by.
 
 Let's begin by exploring our data:
@@ -299,8 +305,8 @@ array(['id', 'Title', 'Authors', 'DOI', 'URL', 'Subjects', 'ISSNs',
 ~~~
 {: .output}
 
-Let's get a list of all the publishers. The *pd.unique* function tells us all of
-the unique values in the *Publisher* column.
+Let's get a list of all the months that articles were published in.
+The `pd.unique` function tells us all of the unique values in a column.
 
 ~~~
 pd.unique(articles_df['Month'])
@@ -313,21 +319,22 @@ which returns:
 array([11, 12,  8,  4, 10,  9,  7,  6,  5,  3,  2,  1])
 ~~~
 {: .source}
+Which show us that articles have been published in every month of the year.
 
 > ## Challenge
 >
 > Create a list of unique ISSNs found in the articles data.
-> Call it *licence_types*. How many unique ISSNs are there in the data?
+> Call it `publications` (Note: each publication has a unique ISSN).
+> How many unique publications (ISSNs) are there in the data?
 {: .challenge}
 
 # Groups in Pandas
-At this point, our DataFrame has only String types. Some of the grouping
-operations work different for numeric types (e.g. calculating averages). So we
-will create a new column on our data frame, which includes the author count.
+Our DataFrame has a mixture of String and Numeric types. Some of the grouping
+operations work different for numeric types (e.g. calculating averages).
 
 We often want to calculate summary statistics grouped by subsets or attributes
 within fields of our data. For example, we might want to know the number of
-articles published by each Publisher.
+articles published in each publication.
 
 We can calculate basic statistics for all records in a single column using the
 syntax below:
@@ -364,7 +371,7 @@ articles_df['Citation_Count'].std()
 {: .source}
 
 But if we want to summarize by one or more variables, for example Language, we can
-use Pandas' *.groupby* method. Once we've created a groupby DataFrame, we
+use Pandas' `.groupby` method. Once we've created a groupby DataFrame, we
 can quickly calculate summary statistics by a group of our choice.
 
 ~~~
@@ -373,9 +380,9 @@ byLang = articles_df.groupby('LanguageId')
 ~~~
 {: .source}
 
-The Pandas function *describe* will return descriptive stats including: mean,
+The Pandas function `describe` will return descriptive stats including: mean,
 median, max, min, std and count for a particular column in the data. Pandas'
-*describe* function will only return summary values for columns containing
+`describe` function will only return summary values for columns containing
 numeric data.
 
 ~~~
@@ -405,14 +412,14 @@ LanguageId
 ~~~
 {: .output}
 
-The *groupby* command is powerful in that it allows us to quickly generate
+The `groupby` command is powerful in that it allows us to quickly generate
 summary stats.
 
 > ## Challenge
 >
-> 1. How many articles are written in for each ISSNs?
+> 1. How many articles are published in each publication?
 > 2. What happens when you group by two columns using the following syntax and
->     then grab mean values:
+>    then grab mean values:
 >
 > ~~~
 > byMultiple = articles_df.groupby(['LanguageId', 'ISSNs'])
@@ -420,9 +427,10 @@ summary stats.
 > ~~~
 > {: .source}
 >
-> 3. Summarize author counts for each ISSNs in your data. HINT: you can use the
+> 3. Summarize author counts for each publication (ISSNs) in your data.
+>    HINT: you can use the
 >    following syntax to only create summary statistics for one column in your data
->    *by_ISSNs['Author_Count'].describe()*
+>    `by_ISSNs['Author_Count'].describe()`
 {: .challenge}
 
 > ## Did you get #3 right?
@@ -443,10 +451,10 @@ summary stats.
 > {: .output}
 {: .solution}
 
-## Quickly Creating Summary Counts in Pandas
+## Quickly creating summary counts in Pandas
 
 Let's next count the number of articles for each publisher. We can do this in a few
-ways, but we'll use *groupby* combined with a *count()* method.
+ways, but we'll use `groupby` combined with a `count()` method.
 
 ~~~
 # count the number of samples by publisher
@@ -461,7 +469,7 @@ articles_df.groupby('ISSNs')['Title'].count()['1420-3049']
 ~~~
 {: .source}
 
-## Basic Math Functions
+## Basic Math functions
 
 If we wanted to, we could perform math on an entire column of our data. For
 example let's multiply all author count values by 2. A more practical use of this might
@@ -477,14 +485,14 @@ articles_df['Author_Count'] * 2
 
 > ## Another Challenge
 >
-> 1. What's another way to create a list of licenses and associated *count* of the
->    records in the data? Hint: you can perform *count*, *min*, etc functions on
+> 1. What's another way to create a list of licenses and associated `count` of the
+>    records in the data? Hint: you can perform `count`, `min`, etc functions on
 >    groupby DataFrames in the same way you can perform them on regular
 >    DataFrames.
 {:.challenge}
 
 
-# Quick & Easy Plotting Data Using Pandas
+# Quick & easy plotting data using Pandas
 
 We can plot our summary stats using Pandas, too.
 
@@ -517,8 +525,8 @@ language_count.plot(kind='bar');
 > ## Summary Plotting Challenge
 >
 > Create a stacked bar plot, with Number of articles on the Y axis, and the
-> stacked variable being LicenceId. The plot should show total number of articles
-> by License for each monthPublisher. Some tips are below to help you solve this
+> stacked variable being `LicenceId`. The plot should show total number of articles
+> by license for each month. Some tips are below to help you solve this
 > challenge:
 >
 > * [For more on Pandas plots, visit this link.](http://pandas.pydata.org/pandas-docs/dev/generated/pandas.core.groupby.DataFrameGroupBy.plot.html)
@@ -554,19 +562,19 @@ language_count.plot(kind='bar');
 >
 > ![Stacked Bar Plot]({{ page.root }}/fig//stackedBar1.png)
 >
-> * You can use the *.unstack()* method to transform grouped data into columns
-> for each plotting.  Try running *.unstack()* on some DataFrames above and see
+> * You can use the `.unstack()` method to transform grouped data into columns
+> for each plotting.  Try running `.unstack()` on some DataFrames above and see
 > what it yields.
 >
-> Start by transforming the grouped data (by LicenceId and Month) into an
+> Start by transforming the grouped data (by `LicenceId` and `Month`) into an
 > unstacked layout, then create a stacked plot.
 >
 {:.challenge}
 
 > ## Solution to Summary Challenge
 >
-> First we group data by Month and by LicenceId, and then calculate a total for
-> each Month.
+> First we group data by `Month` and by `LicenceId`, and then calculate a total for
+> each `Month`.
 >
 > ~~~
 > by_month_lic = articles_df.groupby(['Month','LicenceId'])
@@ -574,7 +582,7 @@ language_count.plot(kind='bar');
 > ~~~
 > {: .source}
 >
-> This calculates the sums of weights for each language within each publisher as a table
+> This calculates the number of articles for each `Month` and `LicenceId` as a table
 >
 > ~~~
 > Month  LicenceId
@@ -598,17 +606,17 @@ language_count.plot(kind='bar');
 > ~~~
 > {: .output}
 >
-> Below we'll use *.unstack()* on our grouped data to figure out the total weight
+> Below we'll use `.unstack()` on our grouped data to figure out the total weight
 > that each language contributed to each publisher.
 >
 > ~~~
 > by_month_lic = articles_df.groupby(['Month','LicenceId'])
-> month_lic_count = by_pub_lang.size()
+> month_lic_count = by_month_lic.size()
 > mlc = month_lic_count.unstack()
 > ~~~
 > {: .source}
 >
-> The *unstack* function above will display the following output:
+> The `unstack` function above will display the following output:
 >
 > ~~~
 > LicenceId   1    2    3    4
@@ -632,16 +640,16 @@ language_count.plot(kind='bar');
 > Month are stacked by License.
 >
 > Rather than display it as a table, we can plot the above data by stacking the
-> values of each Publisher as follows:
+> values of each licence as follows:
 >
 > ~~~
 > by_month_lic = articles_df.groupby(['Month','LicenceId'])
-> month_lic_count = by_pub_lang.size()
+> month_lic_count = by_month_lic.size()
 > mlc = month_lic_count.unstack()
 >
 > s_plot = mlc.plot(kind='bar',stacked=True,title="Total number of articles by Month and Licence")
-> s_plot.set_ylabel("Author Count")
-> s_plot.set_xlabel("Publisher");
+> s_plot.set_ylabel("Licence Count")
+> s_plot.set_xlabel("Month");
 > ~~~
 > {: .source}
 >

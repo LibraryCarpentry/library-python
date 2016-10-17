@@ -11,22 +11,23 @@ objectives:
 
 keypoints:
 - "Types of data: numeric (integers and floats), character, datetime."
+- "Missing data: how to detect and work with missing data."
 
 # training: http://swcarpentry.github.io/instructor-training
 training: do-we-have-a-repo-of-python-training-resources ?
 ---
 
 The format of individual columns and rows will impact analysis performed on a
-dataset read into python. For example, you can't perform mathematical
+dataset read into Python. For example, you can't perform mathematical
 calculations on a string (character formatted data). This might seem obvious,
-however sometimes numeric values are read into python as strings. In this
+however sometimes numeric values are read into Python as strings. In this
 situation, when you then try to perform calculations on the string-formatted
 numeric data, you get an error.
 
 # Types of Data
 
 How information is stored in a
-DataFrame or a python object affects what we can do with it and the outputs of
+DataFrame or a Python object affects what we can do with it and the outputs of
 calculations as well. There are two main types of data that we're explore in
 this lesson: numeric and character types.
 
@@ -39,7 +40,7 @@ floating point numbers, Pandas will assign the entire column to the float data
 type so the decimal points are not lost.
 
 An **integer** will never have a decimal point. Thus 1.13 would be stored as 1.
-1234.345 is stored as 1234. You will often see the data type *Int64* in python
+1234.345 is stored as 1234. You will often see the data type `Int64` in Python
 which stands for 64 bit integer. The 64 simply refers to the memory allocated to
 store data in each cell which effectively relates to how many digits it can
 store in each "cell". Allocating space ahead of time allows computers to
@@ -71,7 +72,7 @@ is in the table below:
 
 Now that we're armed with a basic understanding of numeric and character data
 types, let's explore the format of our survey data. We'll be working with the
-same *surveys.csv* dataset that we've used in previous lessons.
+same `articles.csv` dataset that we've used in previous lessons.
 
 ~~~
 # note that pd.read_csv is used because we imported pandas as pd
@@ -91,9 +92,9 @@ pandas.core.frame.DataFrame
 ~~~
 {: .output}
 
-Next, let's look at the structure of our surveys data. In pandas, we can check
+Next, let's look at the structure of our articles data. In pandas, we can check
 the type of one column in a DataFrame using the syntax
-*dataFrameName[column_name].dtype*:
+`dataFrameName[column_name].dtype`:
 
 ~~~
 articles_df['Title'].dtype
@@ -118,8 +119,8 @@ dtype('int64')
 ~~~
 {: .output}
 
-The type *int64* tells us that python is storing each value within this column
-as a 64 bit integer. We can use the *dat.dtypes* command to view the data type
+The type `int64` tells us that Python is storing each value within this column
+as a 64 bit integer. We can use the `dat.dtypes` command to view the data type
 for each column in a DataFrame (all at once).
 
 ~~~
@@ -179,7 +180,7 @@ print(24-4)
 
 
 If we divide one integer by another, we get a float.
-The result on python 3 is different than in python 2, where the result is an
+The result on Python 3 is different than in Python 2, where the result is an
 integer (integer division).
 
 ~~~
@@ -202,7 +203,7 @@ print(10/3)
 
 
 We can also convert a floating point number to an integer or an integer to
-floating point number. Notice that Python by default rounds down when it
+floating point number. Notice that Python by default **rounds down** when it
 converts from floating point to integer.
 
 ~~~
@@ -229,7 +230,7 @@ float(b)
 # Working With Our Articles Data
 
 Getting back to our data, we can modify the format of values within our data, if
-we want. For instance, we could convert the *Author_Count* field to floating point
+we want. For instance, we could convert the `Author_Count` field to floating point
 values.
 
 ~~~
@@ -277,7 +278,7 @@ len(articles_df[~articles_df['DOI'].isnull()])
 {: .source}
 
 We can replace all null values with a given value (let's assume 'EN') using
-the *.fillna()* method (after making a copy of the data so we don't lose our work):
+the `.fillna()` method (after making a copy of the data so we don't lose our work):
 
 ~~~
 df1 = articles_df.copy()
@@ -287,7 +288,7 @@ df1['DOI'] = df1['DOI'].fillna('UNKNOWN')
 {: .source}
 
 > ## Challenge
-> Verify that *df1* indeed has a language value for all articles.
+> Verify that `df1` indeed has a language value for all articles.
 {: .challenge}
 
 However we cannot know for certain that the articles in question are actually

@@ -24,7 +24,7 @@ For this tutorial, we'll use Pandas.
 For a more detailed tutorial on loading data, see
 [the lesson on beginning with Pandas]({{ page.root }}/01-starting-with-data/)
 
-For now, we'll just use a simple statement to load the surveys data.
+For now, we'll just use a simple statement to load the articles data.
 
 ~~~
 import pandas as pd
@@ -42,12 +42,9 @@ import matplotlib.pyplot as plt
 ~~~
 {: .source}
 
-There's a column in *articles.csv* named "Author_Count" which would make an excellent
-value to plot.
-
-Matplotlib can easily plot a set of data even larger than *articles.csv*, but for
+Matplotlib can easily plot a set of data even larger than `articles.csv`, but for
 this example, we'll take the first 50 of the ~1000 entries that are in
-*articles.csv.* For a more detailed tutorial on slicing data, see
+`articles.csv`. For a more detailed tutorial on slicing data, see
 [this lesson on masking and grouping]({{ page.root }}/05-masking-and-groups/).
 
 ~~~
@@ -55,7 +52,7 @@ small_dataset = articles_df[:50]
 ~~~
 {: .source}
 
-There's a column in *articles.csv* named "plot_id" which would make an excellent
+There's a column in `articles.csv` named `Author_Count` which would make an excellent
 value to plot.
 
 ~~~
@@ -65,7 +62,7 @@ plot_data = small_dataset['Author_Count']
 
 ## Simple Plotting
 
-Now, we have an array of plot data indexed by the *record_id* value. Let's plot it
+Now, we have an array of plot data indexed by the `record_id` value. Let's plot it
 and give it a label.
 
 ~~~
@@ -75,14 +72,14 @@ plt.plot(plot_data, label='My Data')
 
 The data has now been plotted, to see it we can do 2 things:
 
-1. We can interact with the plot by using *plt.show* like so:
+1. We can interact with the plot by using `plt.show()` like so:
 
 ~~~
 plt.show()
 ~~~
 {: .source}
 
-2. Or we can save the plot to a file using *plt.savefig* like so:
+2. Or we can save the plot to a file using `plt.savefig` like so:
 
 ~~~
 plt.savefig('myplot.png')
@@ -90,9 +87,9 @@ plt.savefig('myplot.png')
 {: .source}
 
 This would save the file as a rasterized PNG image. The format is deduced from
-the file name or can be given explicitly using *format* parameter,
-eg. *format="png"*. For raster images, in order to enhance quality one can also
-request particulat resolution in dots per inch using *dpi* parameter. This may
+the file name or can be given explicitly using `format` parameter,
+eg. `format="png"`. For raster images, in order to enhance quality one can also
+request particular resolution in dots per inch using `dpi` parameter. This may
 be useful when creating quality images for printing/publication. Vectorized
 images are supported as well, we just need to save the file as a SVG, EPS or
 PDF which is as simple as:
@@ -109,8 +106,8 @@ set like so:
 
 ~~~
 plt.xlabel('Index')
-plt.ylabel('Plot Value')
-plt.title('The Plot Value From articles.csv')
+plt.ylabel('Author count')
+plt.title('Author counts From articles.csv')
 ~~~
 {: .source}
 
@@ -129,12 +126,12 @@ plt.clf()
 ## Managing figures
 
 It is important to note, that subsequent plots we may have created with
-*plt.plot*
+`plt.plot`
 are (by default) superimposed on the same figure that is created implicitly
-upon first *plt.plot* call. Figures are numbered from 1 and one can switch
-between them by calling *plt.figure(number)*. When creating a new figures
+upon first `plt.plot` call. Figures are numbered from 1 and one can switch
+between them by calling `plt.figure(number)`. When creating a new figures
 one can give a number of options, for example one can fine tune the size and
-default resolution by using *figsize* and *dpi* parameters:
+default resolution by using `figsize` and `dpi` parameters:
 
 ~~~
 plt.figure(figsize=(10, 8), dpi=200)
@@ -201,17 +198,16 @@ plt.plot(plot_data, color=(0.1, 0.9, 0.6))
 ### Line style
 
 The default line style is a solid line. We can make it thinner or thicker by
-specifying *linewidth* or *lw*:
+specifying `linewidth` or `lw`:
 
 ~~~
 plt.plot(plot_data, linewidth=3)
 ~~~
 {: .source}
 
-The default linewidth is 1. A linewidth of 3 would be 3 times as thick as the
-default. Likewise, a linewidth of .75 would be 3/4 of the thickness of the
+The default `linewidth` is 1. A `linewidth` of 3 would be 3 times as thick as the
+default. Likewise, a `linewidth` of .75 would be 3/4 of the thickness of the
 default.
-
 
 ## Other types of plots
 
@@ -223,8 +219,8 @@ plt.plot(plot_data, 'o')
 ~~~
 {: .source}
 
-The *o* means a dot. There are a variety of markers you can use. Here's a
-complete list: http://matplotlib.org/api/markers_api.html#module-matplotlib.markers
+The `o` means a dot. There are a variety of markers you can use. Here's a
+complete list: [Matplotlib line markers](http://matplotlib.org/api/markers_api.html#module-matplotlib.markers)
 
 A simple dashed line:
 
@@ -259,7 +255,7 @@ Marker | Meaning
 '^'|triangle up
 's'|square
 'p'|pentagon
-'*'|star
+'star'|star
 'h'|hexagon
 '+'|plus
 'D'|diamond
@@ -271,8 +267,8 @@ complete control over the way axes are organized.
 
 ## Plot range
 
-One can adjust the range of axes using set *plt.xlim* for horizontal and
-*plt.ylim* for vertical axis. For instence to set X limt to [-10; 15] one can
+One can adjust the range of axes using set `plt.xlim` for horizontal and
+`plt.ylim` for vertical axis. For instance to set `X` limit to [-10; 15] one can
 use:
 
 ~~~
@@ -287,9 +283,9 @@ can use dedicated plot methods:
 
 Method | Result
 ------ | ------
-*plt.semilogx*|logarithmic scaling on X-axis
-*plt.semilogy*|logarithmic scaling on Y-axis
-*plt.loglog*|logarithmic scaling on both axes (log-log plot)
+`plt.semilogx`|logarithmic scaling on X-axis
+`plt.semilogy`|logarithmic scaling on Y-axis
+`plt.loglog`|logarithmic scaling on both axes (log-log plot)
 
 ~~~
 plt.loglog(plot_data)
@@ -299,7 +295,7 @@ plt.loglog(plot_data)
 ### Two independent X or Y axes
 
 To create a plot with two X or two Y axes having different scales, units,
-ranges one can use *plt.twinx* and *plt.twiny*:
+ranges one can use `plt.twinx` and `plt.twiny`:
 
 
 ~~~
@@ -336,8 +332,8 @@ plt.legend(loc='best')
 
 ### Modifying ticks
 
-One can change the location and labels of the axes ticks using *plt.xticks* and
-*plt.yticks* methods:
+One can change the location and labels of the axes ticks using `plt.xticks` and
+`plt.yticks` methods:
 
 ~~~
 plt.xticks([1,2,3,4])* # put ticks in given locations of X-axis
@@ -346,8 +342,8 @@ plt.yticks([1,2,3], ['A', 'B', 'C'])* # put ticks in given locations on Y-axis, 
 ~~~
 {: .source}
 
-Labels can be rotated by adding parameter *rotation=angle_in_degrees*. To draw
-a grid with grid lines at the ticks use *plt.grid()*.
+Labels can be rotated by adding parameter `rotation=angle_in_degrees`. To draw
+a grid with grid lines at the ticks use `plt.grid()`.
 
 ### Labelling
 
@@ -368,9 +364,12 @@ plt.title('Plot title')
 
 ## Plot variations
 
-Matplotlib supports a number of different plot variations, eg. bar plot
-(*plt.bar*), contour plots (*plt.contour*), pie chart (*plt.pie*), error bars
-(*plt.errorbar*), polar plot (*plt.polar*), ...
+Matplotlib supports a number of different plot variations including;
+* bar plot (`plt.bar`),
+* contour plots (`plt.contour`),
+* pie chart (`plt.pie`),
+* error bars (`plt.errorbar`) and
+* polar plot (`plt.polar`).
 
 To use a bar plot:
 
@@ -397,17 +396,17 @@ plt.boxplot(plot_data.values)
 # A Realistic Example -- TODO
 
 You may have noticed there's some more data beyond just the plot value in
-*articles.csv*. Let's plot the plot value and group them by the sex value.
+`articles.csv`. Let's plot the number of authors and group them by month.
 A dot plot would be ideal for this.
 
 Pandas has some built-in tools that make it easy to group your data.
 
 ~~~
-grouped_plot_data = articles_df.groupBy('Month')
+grouped_plot_data = articles_df.groupby('Month')
 ~~~
 {: .source}
 
-This returns our data in an iterable object. Each entry in *grouped_plot_data*
+This returns our data in an iterable object. Each entry in `grouped_plot_data`
 is formatted like so:
 
 ~~~
@@ -415,7 +414,7 @@ is formatted like so:
 ~~~
 {: .output}
 
-We can check the size of each data group using the *len()* function. So we can
+We can check the size of each data group using the `len()` function. So we can
 plot our data like so:
 
 ~~~

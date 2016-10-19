@@ -59,11 +59,11 @@ hippo
 ~~~
 {: .output}
 
-The line defining the loop must start with *for* and end with a colon, and the
+The line defining the loop must start with `for` and end with a colon, and the
 body of the loop must be indented.
 
-In this example, *creature* is the loop variable that takes the value of the next
-entry in *animals* every time the loop goes around. We can call the loop variable
+In this example, `creature` is the loop variable that takes the value of the next
+entry in `animals` every time the loop goes around. We can call the loop variable
 anything we like. After the loop finishes, the loop variable will still exist
 and will have the value of the last entry in the collection:
 
@@ -78,25 +78,25 @@ The loop variable is now: hippo
 {: .source}
 
 We are not asking python to print the value of the loop variable anymore, but
-the for loop still runs and the value of *creature* changes on each pass through
-the loop. The statement *pass* in the body of the loop just means "do nothing".
+the for loop still runs and the value of `creature` changes on each pass through
+the loop. The statement `pass` in the body of the loop just means "do nothing".
 
 > ## Challenge
 >
-> 1. What happens if we don't include the *pass* statement?
+> 1. What happens if we don't include the `pass` statement?
 >
 > 2. Rewrite the loop so that the animals are separated by commas, not new lines
 > (Hint: You can concatenate strings using a plus sign. For example,
-> *print(string1 + string2)* outputs 'string1string2').
+> `print(string1 + string2)` outputs `string1string2`).
 {: .challenge}
 
 ## Automating data processing using For Loops
 
-The file we've been using so far, *articles.csv*, contains 1 year of data.
+The file we've been using so far, `articles.csv`, contains 1 year of data.
 We would like to separate the data for each month into a separate file.
 
-Let's start by making a new directory inside the folder *data* to store all of
-these files using the module *os*:
+Let's start by making a new directory inside the folder `data` to store all of
+these files using the module `os`:
 
 ~~~
 import os
@@ -105,8 +105,8 @@ os.mkdir('data/monthly_files')
 ~~~
 {: .source}
 
-The command *os.mkdir* is equivalent to *mkdir* in the shell. Just so we are
-sure, we can check that the new directory was created within the *data* folder:
+The command `os.mkdir` is equivalent to `mkdir` in the shell. Just so we are
+sure, we can check that the new directory was created within the `data` folder:
 
 ~~~
 os.listdir('data')
@@ -120,12 +120,12 @@ os.listdir('data')
 ~~~
 {: .output}
 
-The command *os.listdir* is equivalent to *ls* in the shell.
+The command `os.listdir` is equivalent to `ls` in the shell.
 
 In previous lessons, we saw how to use the library pandas to load the species
 data into memory as a DataFrame, how to select a subset of the data using some
 criteria, and how to write the DataFrame into a csv file. Let's write a script
-that performs those three steps in sequence for the month of january:
+that performs those three steps in sequence for the month of January:
 
 ~~~
 import pandas as pd
@@ -141,14 +141,14 @@ articles01.to_csv('data/monthly_files/articles01.csv')
 ~~~
 {: .source}
 
-To create yearly data files, we could repeat the last two commands over and
-over, once for each year of data. Repeating code is neither elegant nor
+To create monthly data files, we could repeat the last two commands over and
+over, once for each month of data. Repeating code is neither elegant nor
 practical, and is very likely to introduce errors into your code. We want to
 turn what we've just written into a loop that repeats the last two commands for
-every year in the dataset.
+every month in the dataset.
 
 Let's start by writing a loop that simply prints the names of the files we want
-to create - the dataset we are using one year and we'll create
+to create - the dataset we are using is one year long and we'll create
 a separate file for each month of the year. Listing the filenames is a good way to
 confirm that the loop is behaving as we expect.
 
@@ -160,7 +160,7 @@ articles_df['Month']
 ~~~
 {: .source}
 
-but we want only unique months, which we can get using the *unique* function
+but we want only unique months, which we can get using the `unique` function
 which we have already seen.  
 
 ~~~
@@ -174,19 +174,21 @@ array([11, 12,  8,  4, 10,  9,  7,  6,  5,  3,  2,  1])
 
 Of course, we know that years normally have 12 months, so we could be alternatively
 use:
+
 ~~~
 range(1,13)
 ~~~
 {: .source}
 
 Putting this into our for loop we get
+
 ~~~
 for month in articles_df['Month'].unique():
-   filename = 'data/monthly_files/articles%02d.csv'%month
+   filename = 'data/monthly_files/articles{0:02d}.csv'.format(month)
    print(filename)
 ~~~
-
 {: .source}
+
 ~~~
 data/monthly_files/articles11.csv
 data/monthly_files/articles12.csv
@@ -212,20 +214,20 @@ for month in articles_df['Month'].unique():
     articles_month = articles_df[articles_df.Month == month]
 
     # Write the new DataFrame to a csv file
-    filename = 'data/monthly_files/articles%02d.csv'%month
+    filename = 'data/monthly_files/articles{0:02d}.csv'.format(month)
     articles_month.to_csv(filename)
 ~~~
 {: .source}
 
-Look inside the *monthly_files* directory and check a couple of the files you
+Look inside the `monthly_files` directory and check a couple of the files you
 just created to confirm that everything worked as expected.
 
 ## Writing Unique FileNames
 
-Notice that the code above created a unique filename for each year.
+Notice that the code above created a unique filename for each month.
 
 ~~~
-filename = 'data/monthly_files/articles%02d.csv' % month
+filename = 'data/monthly_files/articles{0:02d}.csv'.format(month)
 ~~~
 {: .source}
 
@@ -233,13 +235,15 @@ Let's break down the parts of this name:
 
 * The first part is simply some text that specifies the directory to store our
   data file in (data/monthly_files/) and the first part of the file name
-  (articles): *'data/monthly_files/articles'*
-* The *%02d* part gives us zero padding for our numbers. We specify the number
-  we want to fill in using the *%* operator.
+  (articles): `'data/monthly_files/articles'`
+* The `{0:02d}` part gives us zero padding for our numbers. We specify the number
+  we want to fill in using the `.format()` method.
+  See [Python str.format() syntax](https://docs.python.org/3/library/string.html#format-string-syntax)
+  for more formatting options.
 
 Notice that we use single quotes to add text strings. The variable is not
 surrounded by quotes. This code produces the string
-*data/monthly_files/articles01.csv* which contains the path to the new filename
+`data/monthly_files/articles01.csv` which contains the path to the new filename
 AND the file name itself.
 
 > ## Challenge
@@ -247,7 +251,7 @@ AND the file name itself.
 > 1. Some of months seem to have more articles than others. Modify the for loop
 > so that the months with less than 100 articles are excluded.
 >
-> 2. Let's say you want to look at data for each trimester of the years. How
+> 2. Let's say you want to look at data for each trimester of the year. How
 > would you modify your loop in order to generate a data file for every 3 month
 > period?
 >
@@ -271,8 +275,8 @@ only exist while the function is running and if a variable within the function
 (a local variable) has the same name as a variable somewhere else in the code,
 the local variable hides but doesn't overwrite the other.
 
-Every method used in Python (for example, *print*) is a function, and the
-libraries we import (say, *pandas*) are a collection of functions. We will only
+Every method used in Python (for example, `print`) is a function, and the
+libraries we import (say, `pandas`) are a collection of functions. We will only
 use functions that are housed within the same code that uses them, but it's also
 easy to write functions that can be used by different programs.
 
@@ -290,7 +294,7 @@ def this_is_the_function_name(input_argument1, input_argument2):
 ~~~
 {: .source}
 
-The function declaration starts with the word *def*, followed by the function
+The function declaration starts with the word `def`, followed by the function
 name and any arguments in parenthesis, and ends in a colon. The body of the
 function is indented just like loops are. If the function returns something when
 it is called, it includes a return statement at the end.
@@ -318,7 +322,7 @@ Their product is: 10 (this is done outside the function!)
 >
 > 1. Change the values of the arguments in the function and check its output
 > 2. Try calling the function by giving it the wrong number of arguments (not 2)
->    or not assigning the function call to a variable (no *product_of_inputs =*)
+>    or not assigning the function call to a variable (no `product_of_inputs =`)
 > 3. Declare a variable inside the function and test to see where it exists (Hint:
 >    can you print it from outside the function?)
 > 4. Explore what happens when a variable both inside and outside the function
@@ -326,7 +330,7 @@ Their product is: 10 (this is done outside the function!)
 >    value of the local variable?
 {: .challenge}
 
-We can now turn our code for saving yearly data files into a function. There are
+We can now turn our code for saving monthly data files into a function. There are
 many different "chunks" of this code that we can turn into functions, and we can
 even create functions that call other functions inside them. Let's first write a
 function that separates data for just one month and saves that data to a file:
@@ -344,12 +348,12 @@ def monthly_csv_writer(this_month, all_data):
     articles_month = all_data[all_data.Month == this_month]
 
     # Write the new DataFrame to a csv file
-    filename = 'data/monthly_files/function_articles%02d.csv' % this_month
+    filename = 'data/monthly_files/articles{0:02d}.csv'.format(month)
     articles_month.to_csv(filename)
 ~~~
 {: .source}
 
-The text between the two sets of triple double quotes is called a docstring and
+The text between the two sets of triple double quotes is called a *docstring* and
 contains the documentation for the function. It does nothing when the function
 is running and is therefore not necessary, but it is good practice to include
 docstrings as a reminder of what the code does. Docstrings in functions also
@@ -361,38 +365,38 @@ monthly_csv_writer?
 {: .source}
 
 ~~~
-monthly_csv_writer(2,articles_df)
+monthly_csv_writer(2, articles_df)
 ~~~
 {: .source}
 
-We changed the root of the name of the csv file (so it is *function_articles*
-instead of *article*) so we can distinguish it from the one we wrote before.
-Check the *monthly_files* directory for the file. Did it do what you expect?
+We changed the root of the name of the csv file (so it is `function_articles`
+instead of `article`) so we can distinguish it from the one we wrote before.
+Check the `monthly_files` directory for the file. Did it do what you expect?
 
-What we really want to do, though, is create files for multiple years without
+What we really want to do, though, is create files for multiple months without
 having to request them one by one. Let's write another function that replaces
-the entire For loop by simply looping through a sequence of years and repeatedly
-calling the function we just wrote, *monthly_csv_writer*:
+the entire For loop by simply looping through a sequence of months and repeatedly
+calling the function we just wrote, `monthly_csv_writer`:
 
 
 ~~~
-def yearly_data_csv_writer(start_month, end_month, all_data):
+def monthly_data_csv_writer(start_month, end_month, all_data):
     """
-    Writes separate csv files for each year of data.
+    Writes separate csv files for each month of data.
 
     start_month --- the first month of data we want
     end_month --- the last month of data we want
     all_data --- DataFrame with full-year data
     """
 
-    # "end_month" is the last year of data we want to pull, so we loop to end_month+1
+    # "end_month" is the last month of data we want to pull, so we loop to end_month+1
     for month in range(start_month, end_month+1):
         monthly_csv_writer(month, all_data)
 ~~~
 {: .source}
 
 Because people will naturally expect that the end month for the files is the last
-month with data, the for loop inside the function ends at *end_month + 1*. By
+month with data, the for loop inside the function ends at `end_month + 1`. By
 writing the entire loop into a function, we've made a reusable tool for whenever
 we need to break a large data file into monthly files. Because we can specify the
 first and last month for which we want files, we can even use this function to
@@ -401,14 +405,14 @@ function:
 
 ~~~
 # Load the data into a DataFrame
-articles_df = pd.read_csv('data/surveys.csv')
+articles_df = pd.read_csv('data/articles.csv')
 
 # Create csv files
-yearly_data_csv_writer(4, 6, articles_df)
+monthly_data_csv_writer(4, 6, articles_df)
 ~~~
 {: .source}
 
-**BEWARE!** If you are using IPython Notebooks and you modify a function, you MUST
+**BEWARE!** If you are using IPython or Jupyter Notebooks and you modify a function, you MUST
 re-run that cell in order for the changed function to be available to the rest
 of the code. Nothing will visibly happen when you do this, though, because
 simply defining a function without *calling* it doesn't produce an output. Any
@@ -420,14 +424,14 @@ output to change.
 > 1. Add two arguments to the functions we wrote that take the path of the
 >    directory where the files will be written and the root of the file name.
 >    Create a new set of files with a different name in a different directory.
-> 2. How could you use the function *yearly_data_csv_writer* to create a csv file
->    for only one month? (Hint: think about the syntax for *range*)
+> 2. How could you use the function `monthly_data_csv_writer` to create a csv file
+>    for only one month? (Hint: think about the syntax for `range`)
 > 3. Make the functions return a list of the names of the files which have been
 >    written. There are many ways you can do this (and you should try them
 >    all!): either of the functions can print to screen, either can use a
 >    return statement to give back numbers or strings to their function call,
 >    or you can use some combination of the two. You could also try using the
->    *os* library to list the contents of directories.
+>    `os` library to list the contents of directories.
 > 4. Explore what happens when variables are declared inside each of the functions
 >    versus in the main (non-indented) body of your code. What is the scope of the
 >    variables (where are they visible)? What happens when they have the same name
@@ -436,17 +440,17 @@ output to change.
 
 The functions we wrote demand that we give them a value for every argument.
 Ideally, we would like these functions to be as flexible and independent as
-possible. Let's modify the function *yearly_data_csv_writer* so that the
-*start_month* and *end_month* default to the full range of the data if they are
+possible. Let's modify the function `monthly_data_csv_writer` so that the
+`start_month` and `end_month` default to the full range of the data if they are
 not supplied by the user. Arguments can be given default values with an equal
 sign in the function declaration. Any arguments in the function without default
-values (here, *all_data*) is a required argument and MUST come before the
+values (here, `all_data`) is a required argument and MUST come before the
 argument with default values (which are optional in the function call).
 
 ~~~
-def yearly_data_arg_test(all_data, start_month = 1, end_month = 12):
+def monthly_data_arg_test(all_data, start_month=1, end_month=12):
     """
-    Modified from yearly_data_csv_writer to test default argument values!
+    Modified from monthly_data_csv_writer to test default argument values!
 
     start_month --- the first month of data we want --- default: 1
     end_month --- the last month of data we want --- default: 12
@@ -456,10 +460,10 @@ def yearly_data_arg_test(all_data, start_month = 1, end_month = 12):
     return start_month, end_month
 
 
-start,end = yearly_data_arg_test (articles_df, 4, 6)
+start,end = monthly_data_arg_test (articles_df, 4, 6)
 print('Both optional arguments:\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df)
+start,end = monthly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 ~~~
 {: .source}
@@ -470,7 +474,7 @@ Default values:			1 12
 ~~~
 {: .output}
 
-The "\t" in the *print* statements are tabs, used to make the text align and be
+The "\t" in the `print` statements are tabs, used to make the text align and be
 easier to read.
 
 But what if our dataset doesn't start in 1 and end in 12? We can modify the
@@ -478,9 +482,9 @@ function so that it looks for the start and end months in the dataset if those
 dates are not provided:
 
 ~~~
-def yearly_data_arg_test(all_data, start_month = None, end_month = None):
+def monthly_data_arg_test(all_data, start_month=None, end_month=None):
     """
-    Modified from yearly_data_csv_writer to test default argument values!
+    Modified from monthly_data_csv_writer to test default argument values!
 
     start_month --- the first month of data we want --- default: None - check all_data
     end_month --- the last month of data we want --- default: None - check all_data
@@ -495,10 +499,10 @@ def yearly_data_arg_test(all_data, start_month = None, end_month = None):
     return start_month, end_month
 
 
-start,end = yearly_data_arg_test (articles_df, 4, 6)
+start,end = monthly_data_arg_test (articles_df, 4, 6)
 print('Both optional arguments:\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df)
+start,end = monthly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 ~~~
 {: .source}
@@ -515,40 +519,40 @@ Default values:			1 12
 >
 {: .challenge}
 
-The default values of the *start_month* and *end_month* arguments in the function
-*yearly_data_arg_test* are now *None*. This is a build-it constant in Python
+The default values of the `start_month` and `end_month` arguments in the function
+`monthly_data_arg_test` are now `None`. This is a built in constant in Python
 that indicates the absence of a value - essentially, that the variable exists in
 the namespace of the function (the directory of variable names) but that it
 doesn't correspond to any existing object.
 
 > ## Challenge
 >
-> 1. What type of object corresponds to a variable declared as *None*? (Hint:
-> create a variable set to *None* and use the function *type()*)
+> 1. What type of object corresponds to a variable declared as `None`? (Hint:
+> create a variable set to `None` and use the function `type()`)
 >
-> 2. Compare the behavior of the function *yearly_data_arg_test* when the
-> arguments have *None* as a default and when they do not have default values.
+> 2. Compare the behavior of the function `monthly_data_arg_test` when the
+> arguments have `None` as a default and when they do not have default values.
 >
-> 3. What happens if you only include a value for *start_month* in the function
-> call? Can you write the function call with only a value for *end_month*? (Hint:
+> 3. What happens if you only include a value for `start_month` in the function
+> call? Can you write the function call with only a value for `end_month`? (Hint:
 > think about how the function must be assigning values to each of the arguments -
 > this is related to the need to put the arguments without default values before
 > those with default values in the function definition!)
 {: .challenge}
 
-The body of the test function now has two conditional statements (*if* statemens) that
-check the values of *start_month* and *end_month*. *If* statements execute the body of
+The body of the test function now has two conditional statements (`if` statements) that
+check the values of `start_month` and `end_month`. `if` statements execute the body of
 the statement when some condition is met. They commonly look something like this:
 
 ~~~
 a = 5
 
-if a<0: # meets first condition?
+if a < 0: # meets first condition?
 
     # if a IS less than zero
     print('a is a negative number')
 
-elif a>0: # did not meet first condition. meets second condition?
+elif a > 0: # did not meet first condition. meets second condition?
 
     # if a ISN'T less than zero and IS more than zero
     print('a is a positive number')
@@ -562,31 +566,31 @@ a is a positive number
 ~~~
 {: .source}
 
-Change the value of *a* to see how this function works. The statement *elif*
+Change the value of `a` to see how this function works. The statement `elif`
 means "else if", and all of the conditional statements must end in a colon.
 
-The *if* statements in the function *yearly_data_arg_test* check whether there is an
-object associated with the variable names *start_month* and *end_month*. If those
-variables are *None*, the if statements return the boolean *True* and execute whatever
+The `if` statements in the function `monthly_data_arg_test` check whether there is an
+object associated with the variable names `start_month` and `end_month`. If those
+variables are `None`, the if statements return the boolean `True` and execute whatever
 is in their body. On the other hand, if the variable names are associated with
-some value (they got a number in the function call), the *if* statements return *False*
+some value (they got a number in the function call), the `if` statements return `False`
 and do not execute. The opposite conditional statements, which would return
-*True* if the variables were associated with objects (if they had received value
-in the function call), would be *if start_month* and *if end_month*.
+`True` if the variables were associated with objects (if they had received value
+in the function call), would be `if start_month` and `if end_month`.
 
-As we've written it so far, the function *yearly_data_arg_test* associates
+As we've written it so far, the function `monthly_data_arg_test` associates
 values in the function call with arguments in the function definition just based
 in their order. If the function gets only two values in the function call, the
-first one will be associated with *all_data* and the second with *start_month*,
+first one will be associated with `all_data` and the second with `start_month`,
 regardless of what we intended them to be. We can get around this problem by
 calling the function using keyword arguments, where each of the arguments in the
 function definition is associated with a keyword and the function call passes
 values to the function using these keywords:
 
 ~~~
-def yearly_data_arg_test(all_data, start_month = None, end_month = None):
+def monthly_data_arg_test(all_data, start_month = None, end_month = None):
     """
-    Modified from yearly_data_csv_writer to test default argument values!
+    Modified from monthly_data_csv_writer to test default argument values!
 
     start_month --- the first month of data we want --- default: None - check all_data
     end_month --- the last month of data we want --- default: None - check all_data
@@ -601,22 +605,22 @@ def yearly_data_arg_test(all_data, start_month = None, end_month = None):
     return start_month, end_month
 
 
-start,end = yearly_data_arg_test (articles_df)
+start,end = monthly_data_arg_test (articles_df)
 print('Default values:\t\t\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df, 4, 6)
+start,end = monthly_data_arg_test (articles_df, 4, 6)
 print('No keywords:\t\t\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df, start_month = 4, end_month = 6)
+start,end = monthly_data_arg_test (articles_df, start_month = 4, end_month = 6)
 print('Both keywords, in order:\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df, end_month = 6, start_month = 4)
+start,end = monthly_data_arg_test (articles_df, end_month = 6, start_month = 4)
 print('Both keywords, flipped:\t\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df, start_month = 4)
+start,end = monthly_data_arg_test (articles_df, start_month = 4)
 print('One keyword, default end:\t', start, end)
 
-start,end = yearly_data_arg_test (articles_df, end_month = 6)
+start,end = monthly_data_arg_test (articles_df, end_month = 6)
 print('One keyword, default start:\t', start, end)
 ~~~
 {: .source}
@@ -632,12 +636,12 @@ One keyword, default start:	6 12
 
 > ## Challenge
 >
-> 1. Rewrite the *monthly_csv_writer* and *yearly_data_csv_writer* functions to
+> 1. Rewrite the `monthly_csv_writer` and `monthly_data_csv_writer` functions to
 > have keyword arguments with default values
 >
-> 2. Modify the functions so that they don't create yearly files if there is no
-> data for a given year and display an alert to the user (Hint: use conditional
-> statements and if loops to do this. For an extra challenge, use *try*
+> 2. Modify the functions so that they don't create monthly files if there is no
+> data for a given month and display an alert to the user (Hint: use conditional
+> statements and if loops to do this. For an extra challenge, use `try`
 > statements!)
 >
 > 3. The code below checks to see whether a directory exists and creates one if it
@@ -653,7 +657,7 @@ One keyword, default start:	6 12
 > ~~~
 > {: .source}
 >
-> 4. The code that you have written so far to loop through the years is good,
+> 4. The code that you have written so far to loop through the months is good,
 > however it is not necessarily reproducible with different datasets.
 > For instance, what happens to the code if we have additional years of data
 > in our CSV files? Using the tools that you learned in the previous activities,

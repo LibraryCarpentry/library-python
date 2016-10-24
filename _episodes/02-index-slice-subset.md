@@ -410,11 +410,9 @@ for DOI (Digital Object Identifier).
 
 > ## Challenges
 >
-> 1. Create a new DataFrame that only contains observations with Language values
->    that are English or French. Assign each language value in the new DataFrame
->    to a new value of `x`. Determine the number of null values in the subset.
-> 2. Create a new DataFrame that contains only observations that are English or
->    French and where the author count is greater than 2. Create a stacked bar
->    plot of average number of authors by language with English vs French values
->    stacked for each publisher.
+> 1. Create a new DataFrame that only contains observations with Languages
+>    that are *NOT* English.
+> 2. Create a new DataFrame that contains only observations where the author
+>    count is greater than 2. Create a stacked bar plot of average number of
+>    authors by language with values stacked for each publisher.
 {: .challenge}

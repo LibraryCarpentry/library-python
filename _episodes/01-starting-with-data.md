@@ -419,8 +419,8 @@ summary stats.
 
 > ## Challenge
 >
-> 1. How many articles are published in each publication?
-> 2. What happens when you group by two columns using the following syntax and
+> - How many articles are published in each publication?
+> - What happens when you group by two columns using the following syntax and
 >    then grab mean values:
 >
 > ~~~
@@ -429,15 +429,15 @@ summary stats.
 > ~~~
 > {: .source}
 >
-> 3. Summarize author counts for each publication (ISSNs) in your data.
+> - Summarize author counts for each publication (ISSNs) in your data.
 >    HINT: you can use the
 >    following syntax to only create summary statistics for one column in your data
 >    `by_ISSNs['Author_Count'].describe()`
 {: .challenge}
 
-> ## Did you get #3 right?
-> A Snippet of the Output from challenge 3 looks like:
-> 
+> ## Did you get it right?
+> The Output from the last question of the previous challenge looks like this:
+>
 > ~~~
 > ISSNs                     
 > 0367-0449|1988-3250  count    11.000000

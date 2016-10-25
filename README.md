@@ -21,7 +21,7 @@ On 2-3 June 2016 during the [Mozilla Science Lab Global Sprint](https://science.
 - [library-git](https://github.com/data-lessons/library-git)
 - [library-openrefine](https://github.com/data-lessons/library-openrefine)
 - [library-sql](https://github.com/data-lessons/library-sql)
-- [library-sql](https://github.com/data-lessons/library-python)
+- [library-python](https://github.com/data-lessons/library-python)
 
 The Library Carpentry sprint was co-ordinated by [Belinda Weaver](https://github.com/weaverbel) and attracted global participation.
 

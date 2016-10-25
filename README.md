@@ -1,97 +1,52 @@
-lesson-example
-==============
+# Library Carpentry
 
-This repository shows how to create a lesson using
-the [Software Carpentry lesson template][styles],
-and is itself an example of the use of that template.
-Please see <https://swcarpentry.github.io/lesson-example/>
-for a rendered version of this material,
-including detailed instructions on design, setup, and formatting.
+The Library Carpentry module '[Python for Librarians](http://data-lessons.github.io/library-python/)' is maintained by ... 
 
-## Quick Instructions
+## Background
 
-1.  Do *not* fork this repository directly on GitHub.
-    Instead, please follow the instructions in [the setup instructions][setup]
-    to create a repository for your lesson by importing material
-    from [the styles repository][styles].
+Library Carpentry is a software skills training programme aimed at library and information professions. It builds on the work of [Software Carpentry](http://software-carpentry.org/) and [Data Carpentry](http://www.datacarpentry.org/).
 
-2.  Once you have created your repository,
-    run `bin/lesson_initialize.py` to create standard lesson-specific files.
-    You *must* edit several values in `_config.yml`
-    so that GitHub Pages will render your lesson correctly.
+These materials are based on the **Library Carpentry** materials initially developed and taught by [James Baker](https://github.com/drjwbaker), [Owen Stephens](https://github.com/ostephens) and [Daniel van Strien](https://github.com/davanstrien) in 2015.
+[http://librarycarpentry.github.io/outline/](http://librarycarpentry.github.io/outline/). The original Library Carpentry contained four modules:
 
-3.  Please read [the episodes of this lesson][rendered] to format your material.
+- Introduction, including jargon busting, data structures and regular expressions
+- The Unix shell, including use of the command line and commands such as`grep` and `sed` to find data within files
+- Git and version control
+- Using OpenRefine for data clean up.
 
-4.  Please keep the master copy of your lesson in your repository's `gh-pages` branch,
-    since that is what is
-    [automatically published as a website by GitHub][github-pages].
+On 2-3 June 2016 during the [Mozilla Science Lab Global Sprint](https://science.mozilla.org/programs/events/global-sprint-2016) these existing first four repositories were forked (links below) and re-developed within individual repositories, with the addition of  **SQL** and **Python** modules, topics which many librarians have expressed interest in learning.
 
-5.  To preview material,
-    please run `make serve` from the command line
-    to launch Jekyll with the correct parameters,
-    or push to your repository's `gh-pages` branch
-    and let GitHub take care of the rendering.
+- [library-data-intro](https://github.com/data-lessons/library-data-intro)
+- [library-shell](https://github.com/data-lessons/library-shell)
+- [library-git](https://github.com/data-lessons/library-git)
+- [library-openrefine](https://github.com/data-lessons/library-openrefine)
+- [library-sql](https://github.com/data-lessons/library-sql)
+- [library-sql](https://github.com/data-lessons/library-python)
 
-6.  Run `make lesson-check` to check that your files follow our formatting rules.
+The Library Carpentry sprint was co-ordinated by [Belinda Weaver](https://github.com/weaverbel) and attracted global participation.
 
-7.  If you find an error or omission in this documentation,
-    please [file an issue in this repository][example-issues].
-    If you find an error or omission in the lesson template,
-    please [file an issue in the styles repository][styles-issues] instead.
+## Contribution
 
-## Layout
+There are many ways of contributing to Library Carpentry:
 
-The layout of this repository is explained in [this site's episodes][rendered].
-In brief:
+- Join our [Gitter discussion forum](https://gitter.im/weaverbel/LibraryCarpentry).
+- Follow updates on [Twitter](https://twitter.com/search?f=tweets&vertical=default&q=%23librarycarpentry&src=typd).
+- Make a suggestion or correct an error by [raising an Issue](https://github.com/data-lessons/library-openrefine/issues).
 
-1.  The source for pages that appear as top-level items in the navigation bar
-    are stored in the root directory,
-    including the home page (`index.md`),
-    the reference page (`reference.md`),
-    and the setup instructions (`setup.md`).
+## Code of Conduct
 
-2.  Source files for lesson episodes are stored in `_episodes`;
-    `_episodes/01-xyz.md` generates `/01-xyz/index.html`,
-    which can be linked to using `/01-xyz/`.
+All participants should agree to abide by the [Software Carpentry Code of Conduct](http://software-carpentry.org/conduct/).
 
-3.  If you are writing lessons in R Markdown,
-    source files go in `_episodes_rmd`.
-    You must run `make lesson-rmd` to turn these into Markdown in `_episodes`
-    and commit those Markdown files to the repository
-    (since GitHub won't run anything except Jekyll to format material).
-    You must also commit any figures generated from your lessons,
-    which are stored in the `fig` directory.
+## Authors
 
-4.  Files that appear under the "extras" menu are stored in `_extras`.
+Library Carpentry is authored and maintained by the [community](https://github.com/data-lessons/library-openrefine/network/members).
 
-5.  Figures are stored in the `fig` directory,
-    data sets in `data`,
-    source code in `code`,
-    and miscellaneous files in `files`.
+## Citation
 
-## Getting Started
+Please cite as:
 
-1.  Run `bin/lesson_initialize.py` to create files
-    that can't be stored in the template repository
-    (because they would cause repeated merge conflicts),
-    then edit `_config.yml` as described in
-    [the documentation][editing-config].
+Library Carpentry. Python for Librarians. June 2016. http://data-lessons.github.io/library-python/.
 
-2.  Run `make lesson-check` at any time
-    to check that your lesson files follow our formatting rules.
-    If you come across formatting issues that the checker doesn't report,
-    please [file an issue in the styles repository][styles-issues].
+## License
 
-3.  For a list of helpful commands run `make` in this directory.
-    If you are looking for things to work on,
-    please see [the list of issues for this repository][issues].
-
-[collections]: https://jekyllrb.com/docs/collections/
-[editing-config]: https://swcarpentry.github.io/lesson-example/03-organization/
-[example-issues]: https://github.com/swcarpentry/lesson-example/issues/
-[github-pages]: https://help.github.com/articles/creating-project-pages-manually/
-[issues]: https://github.com/swcarpentry/lesson-example/issues
-[rendered]: https://swcarpentry.github.io/lesson-example/
-[setup]: https://github.com/swcarpentry/lesson-example/blob/gh-pages/setup.md
-[styles-issues]: https://github.com/swcarpentry/styles/issues/
-[styles]: https://github.com/swcarpentry/styles/
+All the lessons are licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/). **Exceptions: embeds to and from external sources, and direct quotations from speakers.**

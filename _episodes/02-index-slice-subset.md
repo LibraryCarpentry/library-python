@@ -278,8 +278,8 @@ the element that is 3 rows down and first column in the DataFrame.
 > {: .source}
 >
 > 2. What happens when you call:
->     - `dat.iloc[0:4, 1:4]`
->     - `dat.loc[0:4, 1:4]`
+>     - `articles_df.iloc[0:4, 1:4]`
+>     - `articles_df.loc[0:4, 1:4]`
 >     - How are the two commands different?
 {: .challenge}
 

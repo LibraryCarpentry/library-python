@@ -385,6 +385,7 @@ especially:
 
 * [Matplotlib Gallery](http://matplotlib.org/gallery.html)
 * [Scipy Cookbook](http://wiki.scipy.org/Cookbook/Matplotlib)
+* [Pandas Visualisation](http://pandas.pydata.org/pandas-docs/stable/visualization.html)
 
 A box and whisker plot:
 
@@ -393,11 +394,10 @@ plt.boxplot(plot_data.values)
 ~~~
 {: .source}
 
-# A Realistic Example -- TODO
+# A Realistic Example
 
-You may have noticed there's some more data beyond just the plot value in
-`articles.csv`. Let's plot the number of authors and group them by month.
-A dot plot would be ideal for this.
+You may have noticed there's some more data beyond just the `Author_Count` value in
+`articles.csv`. Let's plot the number of articles per month.
 
 Pandas has some built-in tools that make it easy to group your data.
 
@@ -424,6 +424,23 @@ plt.xlim(0, 13)
 plt.xlabel('Month')
 plt.ylabel('Number of articles')
 plt.title('Article count per month')
+~~~
+{: .source}
+
+Making each point a different color may not be useful for this plot, lets try
+a bar chart instead (using Pandas plot to access Matplotlib instead of plt):
+
+~~~
+ax = grouped_plot_data.Title.count().plot(kind='bar', color='green', title='Article count per month')
+ax.set_ylabel('Number of articles')
+~~~
+{: .source}
+
+Using a boxplot we can look at the distribution of the number of authors and
+citations per article for each language:
+
+~~~
+ax = articles_df.boxplot(column=['Author_Count', 'Citation_Count'], by='LanguageId')
 ~~~
 {: .source}
 

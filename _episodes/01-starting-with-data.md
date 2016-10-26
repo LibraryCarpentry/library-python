@@ -274,10 +274,10 @@ of all of the column names in our DataFrame.
 
 > ## Try out the methods below to see what they return.
 >
-> 1. `articles_df.columns`.
-> 2. `articles_df.head()`. Also, what does `articles_df.head(15)` do?
-> 3. `articles_df.tail()`.
-> 4. `articles_df.shape`. Take note of the output of the shape method. What format does it return the shape of the DataFrame in?
+> 1. `articles_df.columns`
+> 2. `articles_df.head()` - Also, what does `articles_df.head(15)` do?
+> 3. `articles_df.tail()`
+> 4. `articles_df.shape` - Take note of the output of the shape method. What format does it return the shape of the DataFrame in?
 {: .challenge}
 
 HINT: [More on tuples, here](https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences).
@@ -419,24 +419,24 @@ summary stats.
 
 > ## Challenge
 >
-> - How many articles are published in each publication?
-> - What happens when you group by two columns using the following syntax and
+> 1. How many articles are published in each publication?
+> 2. What happens when you group by two columns using the following syntax and
 >    then grab mean values:
 >
-> ~~~
-> byMultiple = articles_df.groupby(['LanguageId', 'ISSNs'])
-> byMultiple.mean()
-> ~~~
-> {: .source}
+>    ~~~
+>    byMultiple = articles_df.groupby(['LanguageId', 'ISSNs'])
+>    byMultiple.mean()
+>    ~~~
+>    {: .source}
 >
-> - Summarize author counts for each publication (ISSNs) in your data.
+> 3. Summarize author counts for each publication (ISSNs) in your data.
 >    HINT: you can use the
 >    following syntax to only create summary statistics for one column in your data
 >    `by_ISSNs['Author_Count'].describe()`
 {: .challenge}
 
 > ## Did you get it right?
-> The Output from the last question of the previous challenge looks like this:
+> The Output from question 3 of the previous challenge looks like this:
 >
 > ~~~
 > ISSNs                     

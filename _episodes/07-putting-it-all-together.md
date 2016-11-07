@@ -18,10 +18,10 @@ training: do-we-have-a-repo-of-python-training-resources ?
 ## Putting it all together
 
 Up to this point, we have walked through tasks that are often
-involved in handling and processing data using the workshop ready cleaned  
+involved in handling and processing data using the workshop ready partly cleaned  
 files that we have provided. In this wrap-up exercise, we will perform
-many of the same tasks with real data sets. This lesson also covers data
-visualization.
+many of the same tasks but start by doing some further cleaning of the dataset.
+This lesson also covers data visualization.
 
 As opposed to the previous ones, this lesson does not give step-by-step
 directions to each of the tasks. Use the lesson materials you've already gone
@@ -30,12 +30,8 @@ through as well as the Python documentation to help you along.
 ## 1. Obtain data
 
 There are many repositories online from which you can obtain data. We are
-providing you with one data file to use with these exercises, but feel free to
-use any data that is relevant to your research. The file
-*bouldercreek_09_2013.txt* contains stream discharge data, summarized at 15
-15 minute intervals (in cubic feet per second) for a streamgage on Boulder
-Creek at North 75th Street (USGS gage06730200) for 1-30 September 2013. If you'd
-like to use this dataset, please [download it here.](data/bouldercreek_09_2013.txt)
+continuing with the articles dataset we have been using so far, but feel free to
+use any data that is relevant to your research.
 
 ## 2. Clean up your data and open it using Python and Pandas
 
@@ -61,8 +57,7 @@ delimiter or separator. Common delimiters are *','* for comma, *' '* for space,
 and *'\t'* for tab).
 
 Create a DataFrame that includes only the values of the data that are useful to
-you. In the streamgage file, those values might be the date, time, and discharge
-measurements. Convert any measurements in imperial units into SI units. You can
+you. Convert any measurements in imperial units into SI units. You can
 also change the name of the columns in the DataFrame like this:
 
 ~~~
@@ -96,6 +91,85 @@ With the new column names:
 ~~~
 {: .output}
 
+Create a datetime column from the `Day`, `Month`, `Year` columns during import:
+
+~~~
+articles_df = pd.read_csv("articles.csv",
+                          parse_dates={'Publication_date': ['Year', 'Month', 'Day']}, keep_date_col=True)
+~~~
+{: .source}
+
+Check the new `Publication_date` column against the original
+`Day`, `Month`, `Year` columns to make sure the dates are the same.
+
+Check the type of the new column:
+
+~~~
+articles_df.dtypes
+~~~
+{: .source}
+
+~~~
+Publication_date    datetime64[ns]
+id                           int64
+Title                       object
+Authors                     object
+DOI                         object
+URL                         object
+Subjects                    object
+ISSNs                       object
+Citation                    object
+LanguageId                   int64
+LicenceId                    int64
+Author_Count                 int64
+First_Author                object
+Citation_Count               int64
+Day                         object
+Month                       object
+Year                        object
+dtype: object
+~~~
+{: .output}
+
+Split up the `Authors` to create a new `Author` column
+
+~~~
+articles_df.Authors.map(lambda x: x.split('|'))
+~~~
+{: .source}
+
+~~~
+0                       [Flavia Pennini, Angelo Plastino]
+1                           [Naveed Aslam, Peter C. Wynn]
+2       [Rafael R. C. Cuadrat, Juliano C. Cury, Albert...
+3       [Fabrizio Ortu, Hao Zhu, Marie-Emmanuelle Boul...
+~~~
+{: .output}
+
+~~~
+s = articles_df.Authors.map(lambda x: x.split('|')).apply(pd.Series).unstack()
+df2 = articles_df.join(pd.DataFrame(s.reset_index(level=0, drop=True)))
+df2.rename(columns={0: 'Author'}, inplace=True)
+df2.dropna(subset=['Author'], inplace=True)
+~~~
+{: .source}
+
+~~~
+df3.groupby(by='Author').Title.count().sort_values(ascending=False)
+~~~
+{: .source}
+
+~~~
+Author
+Mehmet Akkurt                39
+Shaaban K. Mohamed           30
+Mustafa R. Albayati          27
+Lahcen El Ammari             27
+Mohamed Saadi                27
+Edward R. T. Tiekink         25
+~~~
+{: .output}
+
 ## 3. Make a line plot of your data
 
 Matplotlib is a Python library that can be used to visualize data. The
@@ -111,13 +185,10 @@ dimensional line plot. These examples walk through the basic commands for making
 line plots using pyplots.
 
 > ## Challenge
-> Make a variety of line plots from your data. If you are using the streamgage
-> data, these could include (1) a hydrograph of the entire month of September
-> 2013, (2) the discharge record for the week of the 2013 Front Range flood
-> (September 9 through 15), (3) discharge vs. time of day, for every day in the
-> record in one figure (Hint: use loops to combine strings and give every line a
-> different style and color), and (4) minimum, maximum, and mean daily discharge
-> values. Add axis labels, titles, and legends to your figures. Make at least one
+> Make a variety of line plots from your data.  
+> (Hint: use loops to combine strings and give every line a
+> different style and color).
+> Add axis labels, titles, and legends to your figures. Make at least one
 > figure with multiple plots using the function *subplot()*.
 {: .challenge}
 

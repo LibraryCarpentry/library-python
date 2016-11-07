@@ -31,7 +31,8 @@ Python's main advantages:
 
 Python is an interpreted language. As a consequence, we can use it in two ways:
 
-* Using interpreter as an "advanced calculator" in interactive mode:
+* Using interpreter as an "advanced calculator" in interactive mode,
+  the interactive prompt `>>>` appears in front of what we type:
 
 ~~~
 user:host:~$ python
@@ -92,7 +93,7 @@ variable into the interpreter:
 ~~~
 {: .source}
 ~~~
-"Data Carpentry"
+"Library Carpentry"
 ~~~
 {: .output}
 
@@ -105,7 +106,7 @@ print(text)
 ~~~
 {: .source}
 ~~~
-"Data Carpentry"
+"Library Carpentry"
 ~~~
 {: .output}
 
@@ -382,6 +383,8 @@ or
 
 
 > ## Reassignment
+> When we set a variable, we call it assignment, reassignment is when we assign a new value to it.
+>
 > Can you do reassignment in a dictionary? Give it a try.
 {: .challenge}
 
@@ -469,16 +472,16 @@ print(z)
 {: .callout}
 
 > ## Parameter order
-> What do you think will happen if we change the order of the named parameters? 
+> What do you think will happen if we change the order of the named parameters?
 > What happens if you type:
 >
 > ~~~
 > print(sub_function(b=2, a=44))
 > ~~~
 > {: .source}
-> 
+>
 > vs
-> 
+>
 > ~~~
 > print(sub_function(2, 44))
 > ~~~

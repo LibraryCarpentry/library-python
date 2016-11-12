@@ -1,11 +1,12 @@
 ---
 title: "Data Ingest & Visualization - Matplotlib & Pandas"
-teaching: ??
-exercises: ??
+teaching: 40
+exercises: 30
 questions:
 - "How does it all tie in together?"
 objectives:
-- "Putting it all together"
+- "To consolidate episodes on data cleaning and manipulation"
+- "To introduce plotting with the Matplotlib library"
 keypoints:
 - "Load data."
 - "Clean data."

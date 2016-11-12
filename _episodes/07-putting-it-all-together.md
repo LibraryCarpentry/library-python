@@ -190,7 +190,6 @@ plt.show()
 ~~~
 {: .source}
 
-![](07_plt1_line.png)
 ![basic plot]({{ page.root }}/fig/07_plt1_line.png)
 
 The command *plt.show()* prompts Python to display the figure. Without it, it
@@ -341,10 +340,10 @@ plt.show()
 
 All of this is fine for numerical data, but we have both textual and numerical data in our Dataframe. Let's consider some ways we might visualise this.
 
-**Example 2.** Create a bar chart of the number of authorships for the 'top ten' authors.
+**Example 1.** Create a bar chart of the number of authorships for the 'top ten' authors.
 
 
-**Example 1.** Create a bar chart of the number of authors per paper (number of authors on the x-axis and count of papers on the y-axis), so how many papers have 5 authors, 4 authors, 3 authors etc.
+**Example 2.** Create a bar chart of the number of authors per paper (number of authors on the x-axis and count of papers on the y-axis), so how many papers have 5 authors, 4 authors, 3 authors etc.
 
 
 > ## Challenge

@@ -19,13 +19,10 @@ training: do-we-have-a-repo-of-python-training-resources ?
 
 Up to this point, we have walked through tasks that are often
 involved in handling and processing data using the workshop ready partly cleaned  
-files that we have provided. In this wrap-up exercise, we will perform
-many of the same tasks but start by doing some further cleaning of the dataset.
-This lesson also covers data visualization.
+files that we have provided. 
+In this consolidation exercise, we will perform many of the same tasks as before but start by doing some further cleaning of the dataset. This lesson also covers data visualization.
 
-As opposed to the previous ones, this lesson does not give step-by-step
-directions to each of the tasks. Use the lesson materials you've already gone
-through as well as the Python documentation to help you along.
+This lesson does not give step-by-step directions to each of the tasks. Use the lesson materials you've already gone through as well as the Python documentation to help you along.
 
 ## 1. Obtain data
 
@@ -33,14 +30,15 @@ There are many repositories online from which you can obtain data. We are
 continuing with the articles dataset we have been using so far, but feel free to
 use any data that is relevant to your research.
 
+The articles dataset is available, as before on [Figshare](https://dx.doi.org/10.6084/m9.figshare.3409471).
+
+Download this zip file (if you haven't done so already) and extract to a suitable location.
+
+You will recall that this data set (in articles.csv) is a list of published articles. The dataset is stored as .csv (comma separated values) files and each row holds information for a single article.
+
 ## 2. Clean up your data and open it using Python and Pandas
 
-To begin, import your data file into Python using Pandas. Did it fail? Your data
-file probably has a header that Pandas does not recognize as part of the data
-table. Remove this header, but do not simply delete it in a text editor! Use
-either a shell script or Python to do this - you wouldn't want to do it by hand
-if you had many files to process.
-
+To begin, import your data file into Python using Pandas. Using `read.csv`, Panda's default action is to read the first row as a header row. Is that what we want in this case?
 If you are still having trouble importing the data as a table using Pandas,
 check the documentation. You can open the docstring in an ipython notebook using
 a question mark. For example:
@@ -51,47 +49,18 @@ pd.read_csv?
 ~~~
 {: .source}
 
-Look through the function arguments to see if there is a default value that is
-different from what your file requires (Hint: the problem is most likely the
-delimiter or separator. Common delimiters are *','* for comma, *' '* for space,
-and *'\t'* for tab).
+From earlier episodes we know that this file contains a number of columns, not all of them might be useful to us. We now need to create a DataFrame that includes only the the data we need to use.
 
-Create a DataFrame that includes only the values of the data that are useful to
-you. Convert any measurements in imperial units into SI units. You can
-also change the name of the columns in the DataFrame like this:
+For these exercises, we need to import just:
+
+Title, Authors, Subject, Citation, LanguageId, First\_Author, Citation\_Count, Day, Month, Year
 
 ~~~
-df = pd.DataFrame({'1stcolumn':[100,200], '2ndcolumn':[10,20]}) # this just creates a DataFrame for the example!
-print('With the old column names:\n') # the \n makes a new line, so it's easier to see
-print(df)
+Note on discrete field imports
 ~~~
 {: .source}
 
-~~~
-With the old column names:
-
-   1stcolumn  2ndcolumn
-0        100         10
-1        200         20
-~~~
-{: .output}
-~~~
-df.columns = ['FirstColumn','SecondColumn'] # rename the columns!
-print('\n\nWith the new column names:\n')
-print(df)
-~~~
-{: .source}
-
-~~~
-With the new column names:
-
-   FirstColumn  SecondColumn
-0          100            10
-1          200            20
-~~~
-{: .output}
-
-Create a datetime column from the `Day`, `Month`, `Year` columns during import:
+And to create a single `Publication_date` column from the individual `Day`, `Month` and `Year` columns during import:
 
 ~~~
 articles_df = pd.read_csv("articles.csv",
@@ -99,10 +68,10 @@ articles_df = pd.read_csv("articles.csv",
 ~~~
 {: .source}
 
-Check the new `Publication_date` column against the original
+Once imported, we can check the new `Publication_date` column against the original
 `Day`, `Month`, `Year` columns to make sure the dates are the same.
 
-Check the type of the new column:
+And then check the data type of the new column:
 
 ~~~
 articles_df.dtypes
@@ -114,14 +83,9 @@ Publication_date    datetime64[ns]
 id                           int64
 Title                       object
 Authors                     object
-DOI                         object
-URL                         object
 Subjects                    object
-ISSNs                       object
 Citation                    object
 LanguageId                   int64
-LicenceId                    int64
-Author_Count                 int64
 First_Author                object
 Citation_Count               int64
 Day                         object
@@ -131,7 +95,11 @@ dtype: object
 ~~~
 {: .output}
 
-Split up the `Authors` to create a new `Author` column
+You'll notice that the `Authors` column actually contains several author names separated by the `|` character. As a first analysis, we would like to find out how many author credits each single author has in the whole dataset, irrespective of whether they are first, second or subsequent authors.
+
+We could do it like this:
+
+We need to split up the `Authors` to create a new `Author` column
 
 ~~~
 articles_df.Authors.map(lambda x: x.split('|'))
@@ -146,6 +114,8 @@ articles_df.Authors.map(lambda x: x.split('|'))
 ~~~
 {: .output}
 
+and then make a duplicate of each row with thsi new author column at the end. If a book has three authors the new dataframe will have three rows for that book entry, one for each author.
+
 ~~~
 s = articles_df.Authors.map(lambda x: x.split('|')).apply(pd.Series).unstack()
 df2 = articles_df.join(pd.DataFrame(s.reset_index(level=0, drop=True)))
@@ -154,8 +124,10 @@ df2.dropna(subset=['Author'], inplace=True)
 ~~~
 {: .source}
 
+We now have many occurences for each author name. we need to aggregate and count these.
+
 ~~~
-df3.groupby(by='Author').Title.count().sort_values(ascending=False)
+df2.groupby(by='Author').Title.count().sort_values(ascending=False)
 ~~~
 {: .source}
 
@@ -170,7 +142,7 @@ Edward R. T. Tiekink         25
 ~~~
 {: .output}
 
-## 3. Make a line plot of your data
+## 3. Make plots of your data
 
 Matplotlib is a Python library that can be used to visualize data. The
 toolbox *matplotlib.pyplot* is a collection of functions that make matplotlib
@@ -179,18 +151,11 @@ there are many other useful tools in matplotlib that you should explore.
 
 We will cover a few basic commands for formatting plots in this lesson. A great
 resource for help styling your figures is the matplotlib gallery
-(http://matplotlib.org/gallery.html), which includes plots in many different
+[http://matplotlib.org/gallery.html](http://matplotlib.org/gallery.html), which includes plots in many different
 styles and the source code that creates them. The simplest of plots is the 2
 dimensional line plot. These examples walk through the basic commands for making
 line plots using pyplots.
 
-> ## Challenge
-> Make a variety of line plots from your data.  
-> (Hint: use loops to combine strings and give every line a
-> different style and color).
-> Add axis labels, titles, and legends to your figures. Make at least one
-> figure with multiple plots using the function *subplot()*.
-{: .challenge}
 
 ### Using pyplot:
 
@@ -221,8 +186,10 @@ plt.show()
 ~~~
 {: .source}
 
+[IMAGE]
+
 The command *plt.show()* prompts Python to display the figure. Without it, it
-creates an object in memory but doesn't produce a visible plot. The ipython
+creates an object in memory but doesn't produce a visible plot. The Jupyter
 notebooks (if using *%matplotlib inline*) will automatically show you the figure
 even if you don't write *plt.show()*, but get in the habit of including this
 command!
@@ -240,6 +207,8 @@ plt.show()
 ~~~
 {: .source}
 
+[IMAGE]
+
 A third, optional argument in *plot()* is a string of characters that indicates
 the line type and color for the plot. The default value is a continuous blue
 line. For example, we can make the line red (*'r'*), with circles at every data
@@ -252,6 +221,8 @@ plt.axis([0,10,0,6])
 plt.show()
 ~~~
 {: .source}
+
+[IMAGE]
 
 The command *plt.axis()* sets the limits of the axes from a list of *[xmin,
 xmax, ymin, ymax]* values (the square brackets are needed because the argument
@@ -280,6 +251,8 @@ plt.show()
 ~~~
 {: .source}
 
+[IMAGE]
+
 We can include a legend by adding the optional keyword argument *label=''* in
 *plot()*. Caution: We cannot add labels to multiple lines that are plotted
 simultaneously by the *plt.plot()* command like we did above because Python
@@ -302,6 +275,8 @@ plt.title('This is the figure title')
 plt.show()
 ~~~
 {: .source}
+
+[IMAGE]
 
 The function *legend()* adds a legend to the figure, and the optional keyword
 arguments change its style. By default [typing just *plt.legend()*], the legend
@@ -333,6 +308,8 @@ plt.show()
 ~~~
 {: .source}
 
+[IMAGE]
+
 A single figure can also include multiple plots in a grid pattern. The
 *subplot()* command especifies the number of rows, the number of columns, and
 the number of the space in the grid that particular plot is occupying:
@@ -352,6 +329,27 @@ plt.plot(t, t**3, 'g^:', label='cubic')
 plt.show()
 ~~~
 {: .source}
+
+[IMAGE]
+
+All of this is fine for numerical data, but we have both textual and numerical data in our Dataframe. Let's consider some ways to visualise this:
+
+1. Create a bar chart of the number of authors per paper (number of authers on the x-axis and count of papers on the y-axis)
+
+[EXAMPLE]
+[IMAGE]
+
+2. Create a bar chart of the number of authorships for the 'top ten' authors.
+
+[EXAMPLE]
+[IMAGE]
+
+> ## Challenge
+> What other bar charts and line plots can you make from this data? 
+> Add axis labels, titles, and legends to your figures. Make at least one
+> figure with multiple plots using the function *subplot()*.
+{: .challenge}
+
 
 ## 4. Make other types of plots:
 

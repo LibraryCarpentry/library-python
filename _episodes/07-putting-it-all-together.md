@@ -30,18 +30,20 @@ There are many repositories online from which you can obtain data. We are
 continuing with the articles dataset we have been using so far, but feel free to
 use any data that is relevant to your research.
 
-The articles dataset is available, as before on [Figshare](https://dx.doi.org/10.6084/m9.figshare.3409471).
+The articles dataset is available, as before, on [Figshare](https://dx.doi.org/10.6084/m9.figshare.3409471).
 
 Download this zip file (if you haven't done so already) and extract to a suitable location.
 
-You will recall that this data set (in articles.csv) is a list of published articles. The dataset is stored as .csv (comma separated values) files and each row holds information for a single article.
+You will recall that this data set (in `articles.csv`) is a list of published articles. The dataset is stored as .csv (comma separated values) files and each row holds information for a single article.
 
 ## 2. Clean up your data and open it using Python and Pandas
 
-To begin, import your data file into Python using Pandas. Using `read.csv`, Panda's default action is to read the first row as a header row. Is that what we want in this case?
-If you are still having trouble importing the data as a table using Pandas,
-check the documentation. You can open the docstring in an ipython notebook using
-a question mark. For example:
+To begin, import your data file into Python using Pandas. Using `read.csv`, Panda's default action is to read the first row as a header row. 
+
+Is that what we want in this case?
+
+If you are having trouble importing the data as a table using Pandas,
+check the documentation. You can open the docstring (the basic help documentation) in an Jupyter notebook using a question mark. For example:
 
 ~~~
 import pandas as pd
@@ -49,14 +51,16 @@ pd.read_csv?
 ~~~
 {: .source}
 
-From earlier episodes we know that this file contains a number of columns, not all of them might be useful to us. We now need to create a DataFrame that includes only the the data we need to use.
+From earlier episodes we know that this file contains a number of columns but not all of them might be useful to us. We now need to import the data and create a DataFrame that includes only the the data we need to use.
 
 For these exercises, we need to import just:
 
-Title, Authors, Subject, Citation, LanguageId, First\_Author, Citation\_Count, Day, Month, Year
+**Title, Authors, Subject, Citation, LanguageId, First\_Author, Citation\_Count, Day, Month, Year**
+
+For example, to import just `Title` and `Authors`:
 
 ~~~
-Note on discrete field imports
+pd.read_csv("articles.csv", usecols=['Title', 'Authors'])
 ~~~
 {: .source}
 
@@ -114,7 +118,7 @@ articles_df.Authors.map(lambda x: x.split('|'))
 ~~~
 {: .output}
 
-and then make a duplicate of each row with thsi new author column at the end. If a book has three authors the new dataframe will have three rows for that book entry, one for each author.
+and then make a duplicate of each row with this new author column at the end. If a book has three authors the new dataframe will have three rows for that book entry, one for each author.
 
 ~~~
 s = articles_df.Authors.map(lambda x: x.split('|')).apply(pd.Series).unstack()
@@ -186,7 +190,8 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![](07_plt1_line.png)
+![basic plot]({{ page.root }}/fig/07_plt1_line.png)
 
 The command *plt.show()* prompts Python to display the figure. Without it, it
 creates an object in memory but doesn't produce a visible plot. The Jupyter
@@ -207,7 +212,7 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Line plot]({{ page.root }}/fig/07_plt2_line.png)
 
 A third, optional argument in *plot()* is a string of characters that indicates
 the line type and color for the plot. The default value is a continuous blue
@@ -222,7 +227,8 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Plot with markers]({{ page.root }}/fig/07_plt3_line_ro.png)
+
 
 The command *plt.axis()* sets the limits of the axes from a list of *[xmin,
 xmax, ymin, ymax]* values (the square brackets are needed because the argument
@@ -251,7 +257,7 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Multiple line plot]({{ page.root }}/fig/07_plt4_line_multiple.png)
 
 We can include a legend by adding the optional keyword argument *label=''* in
 *plot()*. Caution: We cannot add labels to multiple lines that are plotted
@@ -276,7 +282,7 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Plot with full legend]({{ page.root }}/fig/07_plt5_line_mult_legend.png)
 
 The function *legend()* adds a legend to the figure, and the optional keyword
 arguments change its style. By default [typing just *plt.legend()*], the legend
@@ -308,7 +314,8 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Dotted line first subplot]({{ page.root }}/fig/07_plt5a_subplot.png)
+![Solid blue subplot]({{ page.root }}/fig/07_plt5b_subplot.png)
 
 A single figure can also include multiple plots in a grid pattern. The
 *subplot()* command especifies the number of rows, the number of columns, and
@@ -330,19 +337,15 @@ plt.show()
 ~~~
 {: .source}
 
-[IMAGE]
+![Gridded subplot]({{ page.root }}/fig/07_plt6_subplots.png)
 
-All of this is fine for numerical data, but we have both textual and numerical data in our Dataframe. Let's consider some ways to visualise this:
+All of this is fine for numerical data, but we have both textual and numerical data in our Dataframe. Let's consider some ways we might visualise this.
 
-1. Create a bar chart of the number of authors per paper (number of authers on the x-axis and count of papers on the y-axis)
+**Example 2.** Create a bar chart of the number of authorships for the 'top ten' authors.
 
-[EXAMPLE]
-[IMAGE]
 
-2. Create a bar chart of the number of authorships for the 'top ten' authors.
+**Example 1.** Create a bar chart of the number of authors per paper (number of authors on the x-axis and count of papers on the y-axis), so how many papers have 5 authors, 4 authors, 3 authors etc.
 
-[EXAMPLE]
-[IMAGE]
 
 > ## Challenge
 > What other bar charts and line plots can you make from this data? 
@@ -362,7 +365,8 @@ save as a text file with a *.py* extension and run in the command line).
 > ## Challenge
 > Display your data using one or more plot types from the example gallery. Which
 > ones to choose will depend on the content of your own data file. If you are
-> using the streamgage file, you could make a histogram of the number of days with
-> a given mean discharge, use bar plots to display daily discharge statistics, or
-> explore the different ways matplotlib can handle dates and times for figures.
+> using the articles dataset, you could plot a histogram of frequencies of to 10 or 20
+> most common subject keywords, create a scatter plot to investigate (say) the
+> correlation between subject number of citations, or explore the different ways
+> matplotlib can handle time series data.
 {: .challenge}

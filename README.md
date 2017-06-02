@@ -1,6 +1,8 @@
 # Library Carpentry
 
-The Library Carpentry module '[Python for Librarians](http://data-lessons.github.io/library-python/)' is maintained by ... 
+The Library Carpentry module '[Python for Librarians](http://data-lessons.github.io/library-python/)' is maintained by 
+by [Carlos Martinez](https://github.com/c-martinez) and [Richard Vankoningsveld](https://github.com/richyvk).
+
 
 ## Background
 

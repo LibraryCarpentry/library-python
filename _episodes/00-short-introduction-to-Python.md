@@ -85,7 +85,7 @@ pi_value = 3.1415
 
 Here we've assigned data to variables, namely `text`, `number` and `pi_value`,
 using the assignment operator `=`. The variable called `text` is a string which
-means it can contain letters and numbers. We could reassign the variable `text`
+means it can contain text characters such as letters and numbers. We could reassign the variable `text`
 to an integer too - but be careful reassigning variables as this can get
 confusing.
 
@@ -102,7 +102,7 @@ variable into the interpreter:
 ~~~
 {: .output}
 
-however, in scripts we must use the `print` function:
+However, in scripts we must use the `print` function:
 
 ~~~
 # Comments start with #
@@ -172,6 +172,26 @@ We can also use comparison and logic operators:
 
 ~~~
 False
+~~~
+{: .output}
+
+~~~
+>>> 6 != 7
+~~~
+{: .source}
+
+~~~
+True
+~~~
+{: .output}
+
+~~~
+>>> 3 == 3
+~~~
+{: .source}
+
+~~~
+True
 ~~~
 {: .output}
 

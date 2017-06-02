@@ -51,17 +51,16 @@ and the columns represent:
 | Year             | Year of publication                |
 
 ## About (Software) Libraries
+
 A library in Python contains a set of tools (called functions) that perform
 tasks on our data. Importing a library is like getting a piece of lab equipment
 out of a storage locker and setting it up on the bench for use in a project.
 Once a library is set up, it can be used or called to perform many tasks.
 
 ## Pandas in Python
-One of the best options for working with tabular data in Python is to use the
-[Python Data Analysis Library](http://pandas.pydata.org/) (a.k.a. Pandas). The
-Pandas library provides data structures, produces high quality plots with
-[matplotlib](http://matplotlib.org/) and integrates nicely with other libraries
-that use [NumPy](http://www.numpy.org/) (which is another Python library) arrays.
+
+One of the best options for working with tabular data in Python is to use the [pandas](http://pandas.pydata.org/) data analysis library. 
+Pandas provides data structures, produces high quality plots with [matplotlib](http://matplotlib.org/), and integrates nicely with other libraries that use [NumPy](http://www.numpy.org/) (which is another Python library) arrays.
 
 Python doesn't load all of the libraries available to it by default. We have to
 add an `import` statement to our code in order to use library functions. To import

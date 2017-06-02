@@ -44,6 +44,7 @@ numeric ranges or specific x,y index locations.
 We use square brackets `[]` to select a subset of an Python object. For example,
 we can select all of data from a column named `Authors` from the `articles_df`
 DataFrame by name:
+
 ~~~
 articles_df['Authors']
 ~~~

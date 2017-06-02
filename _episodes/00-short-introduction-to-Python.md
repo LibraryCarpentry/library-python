@@ -42,14 +42,17 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> 2 + 2
 ~~~
 {: .source}
+
 ~~~
 4
 ~~~
 {: .output}
+
 ~~~
 >>> print("Hello World")
 ~~~
 {: .source}
+
 ~~~
 Hello World
 ~~~
@@ -61,6 +64,7 @@ Hello World
 user:host:~$ python my_script.py
 ~~~
 {: .source}
+
 ~~~
 Hello World
 ~~~
@@ -92,6 +96,7 @@ variable into the interpreter:
 >>> text
 ~~~
 {: .source}
+
 ~~~
 "Library Carpentry"
 ~~~
@@ -105,6 +110,7 @@ however, in scripts we must use the `print` function:
 print(text)
 ~~~
 {: .source}
+
 ~~~
 "Library Carpentry"
 ~~~
@@ -119,30 +125,37 @@ We can perform mathematical calculations in Python using the basic operators
 >>> 2 + 2
 ~~~
 {: .source}
+
 ~~~
 4
 ~~~
 {: .output}
+
 ~~~
 >>> 6 * 7
 ~~~
 {: .source}
+
 ~~~
 42
 ~~~
 {: .output}
+
 ~~~
 >>> 2 ** 16  # power
 ~~~
 {: .source}
+
 ~~~
 65536
 ~~~
 {: .output}
+
 ~~~
 >>> 13 % 5  # modulo
 ~~~
 {: .source}
+
 ~~~
 3
 ~~~
@@ -156,22 +169,27 @@ We can also use comparison and logic operators:
 >>> 3 > 4
 ~~~
 {: .source}
+
 ~~~
 False
 ~~~
 {: .output}
+
 ~~~
 >>> True and True
 ~~~
 {: .source}
+
 ~~~
 True
 ~~~
 {: .output}
+
 ~~~
 >>> True or False
 ~~~
 {: .source}
+
 ~~~
 True
 ~~~
@@ -189,6 +207,7 @@ elements. Each element can be accessed by an index:
 >>> numbers[0]
 ~~~
 {: .source}
+
 ~~~
 1
 ~~~
@@ -202,6 +221,7 @@ for num in numbers:
     print(num)
 ~~~
 {: .source}
+
 ~~~
 1
 2
@@ -220,6 +240,7 @@ To add elements to the end of a list, we can use the `append` method:
 >>> print(numbers)
 ~~~
 {: .source}
+
 ~~~
 [1,2,3,4]
 ~~~
@@ -233,6 +254,7 @@ To find out what methods are available for an object, we can use the built-in `h
 help(numbers)
 ~~~
 {: .source}
+
 ~~~
 Help on list object:
 
@@ -252,6 +274,7 @@ responsible for the `+` operator.
 >>> dir(numbers)
 ~~~
 {: .source}
+
 ~~~
 ['__add__', '__class__', '__contains__', ...]
 ~~~
@@ -281,11 +304,13 @@ a_list = [1,2,3]
 > a_tuple[2]=5
 > ~~~
 > {: .source}
+>
 > vs
 > ~~~
 > a_list[1]=5
 > ~~~
 > {: .source}
+>
 > ?
 {: .challenge}
 

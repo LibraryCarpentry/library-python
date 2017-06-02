@@ -29,10 +29,9 @@ Python's main advantages:
 
 ## Interpreter
 
-Python is an interpreted language. As a consequence, we can use it in two ways:
+Python is an interpreted language, which means it directly executes the instructions we give it. As a consequence, we can use it in two ways:
 
-* Using interpreter as an "advanced calculator" in interactive mode,
-  the interactive prompt `>>>` appears in front of what we type:
+* Type commands directly in Python using what is called the "interpreter;" note the interactive prompt `>>>` that goes in front of what we type:
 
 ~~~
 user:host:~$ python
@@ -58,7 +57,7 @@ Hello World
 ~~~
 {: .output}
 
-* Executing programs/scripts saved as a text file, usually with `*.py` extension:
+* Execute programs/scripts saved as a text file, usually with `*.py` extension, using the `python` command:
 
 ~~~
 user:host:~$ python my_script.py

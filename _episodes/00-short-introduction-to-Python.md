@@ -24,7 +24,6 @@ Python's main advantages:
 * Available on all platforms
 * "Batteries Included" philosophy - libraries for common tasks available in
   standard installation
-* Supports multiple programming paradigms
 * Very large community
 
 ## Interpreter

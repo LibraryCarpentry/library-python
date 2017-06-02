@@ -220,7 +220,7 @@ True
 ### Lists
 
 **Lists** are a common data structure to hold an ordered sequence of
-elements. Each element can be accessed by an index:
+elements. Each element can be accessed by an index, where the first element is 0, the second element is 1, and so on:
 
 ~~~
 >>> numbers = [1,2,3]
@@ -285,7 +285,7 @@ class list(object)
 ~~~
 {: .output}
 
-We can also access a list of methods using `dir`. Some methods names are
+We can also access a list of methods available to an object using `dir`. Some methods names are
 surrounded by double underscores. Those methods are called "special", and
 usually we access them in a different way. For example `__add__` method is
 responsible for the `+` operator.

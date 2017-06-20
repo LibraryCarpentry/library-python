@@ -3,12 +3,8 @@ layout: page
 title: Discussion
 permalink: /discuss/
 ---
-Readers may be interested in:
+There are many ways to discuss Library Carpentry lessons:
 
-*   PeerJ's [paper-now], which uses [Jekyll][jekyll] as a framework for writing scientific papers.
-*   The [Morea Framework][morea],
-    a more elaborate template for [Jekyll][jekyll]-based lessons.
-
-[jekyll]: http://jekyllrb.com/
-[morea]: https://morea-framework.github.io/
-[paper-now]: https://github.com/PeerJ/paper-now
+- Join our [Gitter discussion forum]({{ site.contact }}).
+- Follow updates on [Twitter](https://twitter.com/LibCarpentry).
+- Make a suggestion or correct an error by [raising an Issue](https://github.com/data-lessons/library-python/issues).

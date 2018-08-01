@@ -1,6 +1,6 @@
 # Library Carpentry
 
-The Library Carpentry module '[Python for Librarians](http://data-lessons.github.io/library-python/)' is maintained by 
+The Library Carpentry module '[Python for Librarians](http://LibraryCarpentry.github.io/library-python/)' is maintained by 
 by [Carlos Martinez](https://github.com/c-martinez) and [Richard Vankoningsveld](https://github.com/richyvk).
 
 
@@ -16,7 +16,7 @@ There are many ways of contributing to Library Carpentry:
 
 - Join our [Gitter discussion forum](https://gitter.im/LibraryCarpentry/).
 - Follow updates on [Twitter](https://twitter.com/LibCarpentry).
-- Make a suggestion or correct an error by [raising an Issue](https://github.com/data-lessons/library-python/issues).
+- Make a suggestion or correct an error by [raising an Issue](https://github.com/LibraryCarpentry/library-python/issues).
 
 ## Code of Conduct
 
@@ -24,10 +24,10 @@ All participants should agree to abide by the [Software Carpentry Code of Conduc
 
 ## Authors
 
-Library Carpentry is authored and maintained by the [community](https://github.com/data-lessons/library-openrefine/network/members).
+Library Carpentry is authored and maintained by the [community](https://github.com/LibraryCarpentry/library-openrefine/network/members).
 
 ## Citation
 
 Please cite as:
 
-Library Carpentry. Python for Librarians. June 2016. http://data-lessons.github.io/library-python/.
+Library Carpentry. Python for Librarians. June 2016. http://LibraryCarpentry.github.io/library-python/.
